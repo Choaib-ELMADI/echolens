@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<title>EchoLens | Smart Device</title>
+		<link rel="stylesheet" href="index.css" />
+	</head>
+
+	<body>
+		<section class="main">
+			<div class="page-header">
+				<div class="page-header__top">
+					<h1 class="slogan">
+						EchoLens - Your Personalized Gateway to a Beautiful Life.
+					</h1>
+					<div class="toggle-container">
+						<input
+							hidden
+							id="show-hide-image"
+							name="show-hide-image"
+							type="checkbox"
+						/>
+						<label class="toggle" for="show-hide-image">
+							<div class="toggle__circle"></div>
+						</label>
+						<div class="toggle-text">
+							<span>N</span>
+							<span>F</span>
+						</div>
+					</div>
+				</div>
+				<div class="page-header__bottom">
+					<div class="mode-toggle-container">
+						<input
+							hidden
+							id="dark-light-mode"
+							name="dark-light-mode"
+							type="checkbox"
+						/>
+						<label class="toggle" for="dark-light-mode">
+							<div class="toggle__circle"></div>
+						</label>
+						<p id="dark-light-curr-mode">Dark</p>
+					</div>
+					<div class="dt-container">
+						<span id="date-container">Date: 2/15/2024</span>
+						<span id="time-container">Time: 14:17:51</span>
+					</div>
+				</div>
+			</div>
+
+			<div class="controls-container">
+				<div class="listening control">
+					<label for="toggle-listening" class="header">
+						<h3>Listen</h3>
+						<div class="controls-toggle-container">
+							<input
+								hidden
+								id="toggle-listening"
+								name="toggle-listening"
+								type="checkbox"
+							/>
+							<label class="toggle" for="toggle-listening">
+								<div class="toggle__circle"></div>
+							</label>
+						</div>
+					</label>
+					<div class="indicator" id="listening-indicator">
+						<h3>Recording Audio</h3>
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+				</div>
+				<!--
+				<div class="talking control">
+					<label for="toggle-talking" class="header">
+						<h3>Talk</h3>
+						<div class="controls-toggle-container">
+							<input
+								hidden
+								id="toggle-talking"
+								name="toggle-talking"
+								type="checkbox"
+							/>
+							<label class="toggle" for="toggle-talking">
+								<div class="toggle__circle"></div>
+							</label>
+						</div>
+					</label>
+					<div class="indicator" id="talking-indicator">
+						<h3>Processing Image</h3>
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
+					</div>
+				</div> -->
+				<div class="speech control" id="speech-container">
+					<p id="generated-text" class="generated-text">
+						<span>He/She said: </span>
+						<span>"</span>
+						<span id="generated-text-container">Hello...</span>
+						<span>"</span>
+					</p>
+					<div class="buttons-container">
+						<button class="clear-generated-text" id="clear-generated-text">
+							Clear
+						</button>
+					</div>
+				</div>
+			</div>
+
+			<!--
+			<div id="stream-container" class="stream-container">
+				<div class="image-container">
+					<img id="stream-image" src="/" alt="** Stream Image **" />
+				</div>
+				<input
+					type="range"
+					min="0"
+					max="255"
+					value="125"
+					class="led-intensity-slider"
+					id="led-intensity-slider"
+				/>
+			</div>
+			-->
+
+			<footer>
+				<p>EchoLens | Smart Device - By Alpha-Amps</p>
+			</footer>
+		</section>
+		<script src="index.js"></script>
+	</body>
+</html>

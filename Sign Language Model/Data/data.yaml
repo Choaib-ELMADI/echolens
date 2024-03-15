@@ -1,0 +1,7 @@
+path: ../drive/MyDrive/Datasets/Sign_Language
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 4
+names: ["thumsup", "thumsdown", "thankyou", "livelong"]

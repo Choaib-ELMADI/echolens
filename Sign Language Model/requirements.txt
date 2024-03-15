@@ -1,0 +1,17 @@
+cvzone==1.5.6               # installed
+ultralytics==8.0.239        # installed
+hydra-core>=1.2.0           # installed
+matplotlib>=3.2.2           # installed
+numpy>=1.18.5               # installed
+opencv-python==4.5.4.60     # installed
+Pillow>=7.1.2               # installed
+PyYAML>=5.3.1               # installed
+requests>=2.23.0            # installed
+scipy>=1.4.1                # installed
+torch>=1.7.0                # installed
+torchvision>=0.8.1          # installed
+tqdm>=4.64.0                # installed
+filterpy==1.4.5             # installed
+scikit-image==0.19.3        # installed
+lap==0.4.0                  # installed lapx
+distutils                   # installed setuptools

@@ -1,0 +1,81 @@
+1. What is Object Detection:
+    * Object Detection is a computer vision technique for locating objects in a image or a video.
+    * Object Detection gives us the bounding box (x, y, width, height) of an object as well as the classification of that object.
+    * Image recognition types:
+        -> Object Classification: Identifies what type of object is present in an image          ==> Single class
+        -> Object Detection: Identifies and locate the presence of an object in an image         ==> Bounding box, class
+        -> Object Segmentation: Identifies and separate the objects in an image on a pixel level ==> The exact shapes of objects
+
+2. Performance Evaluation Matrix:
+    * There are two matrixes to evaluate our object detection model:
+        => IoU - Intersection Over Union: Evaluate how good is the location ==> 0 --> 1
+            IoU  = (Area of Intersection) / (Area of Union)
+
+        => mAP - Mean Average Precision: Evaluate how good is the classification
+            Average precision:
+                - Confusion matrix 
+                    A table of the reel classes and the predicted classes.
+
+                - Precision
+                    Actual positives out of the total positive predictions
+                    Precision = (True positives) / (True positives + False positives)
+
+                - Recall
+                    Actual positives out of all predictions.
+                    Recall = (True positives) / (True positives + False Negatives)
+
+3. Create Custom Models:
+    1. We need a dataset
+    2. The structure of the dataset:
+        > test
+            > images
+                - img 1
+                ...
+            > labels
+                - label 1
+                ...
+
+        > train
+            > images
+                - img 1
+                ...
+            > labels
+                - label 1
+                ...
+
+        > valid
+            > images
+                - img 1
+                ...
+            > labels
+                - label 1
+                ...
+
+        - data.yaml: It gatheres all this information
+
+    3. Add your dataset to Google drive:
+        -> Update the data.yaml file: add the path of the dataset in the drive
+
+    4. How to label your own images:
+        -> https://github.com/heartexlabs/labelImg
+        -> Set your predefined classes
+        -> Execute labelImg.exe
+        -> Set save format to YOLO
+
+    5. Google Colab:
+        -> Mount your drive to Google Colab
+        -> ...
+        -> Get your weights: /runs/detect/train/weights/best.yaml
+
+4. Notes:
+    * Link your venv with your jupyter notebook:
+        -> pip install ipykernel
+        -> python -m ipykernel install --user --name=VenvName
+
+    * In Google Colab:
+        -> Set runtime type to GPU
+        -> Connect your account
+        -> Give a title to the jupyter notebook
+        -> Add the dataset to Google Drive
+        -> Mount Drive
+        -> ...
