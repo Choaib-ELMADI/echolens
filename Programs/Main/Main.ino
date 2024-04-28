@@ -4,7 +4,9 @@
 #include <WebServer.h>
 #include <WiFi.h>
 
+// const char *ssid = "TL-MR110  5G";
 const char *ssid = "Choaibs-Phone";
+// const char *password = "UMRA2024";
 const char *password = "devchoaib";
 
 char XML[1024];
@@ -17,7 +19,7 @@ int ledIntensity = 125;
 char generatedText[30] = "empty";
 uint32_t lastDataMillis = 0;
 
-// WebServer server(80);
+WebServer server(80);
 
 void setupCamera();
 camera_config_t setupConfiguration();
@@ -33,24 +35,17 @@ void setup() {
     connectToWiFi();
     Serial.println("Done connect WiFi.");
 
-    // server.on("/", sendMainPage);
-    // server.on("/xml", sendXmlData);
-    // server.on("/UPDATE_INTENSITY", sliderIntensityUpdate);
-    // server.on("/TOGGLE_VIEW_STREAM", toggleViewStream);
-    // server.on("/TOGGLE_LISTENING", toggleListening);
-    // server.on("/TOGGLE_TALKING", toggleTalking);
+    server.on("/", sendMainPage);
+    server.on("/xml", sendXmlData);
+    server.on("/UPDATE_INTENSITY", sliderIntensityUpdate);
+    server.on("/TOGGLE_VIEW_STREAM", toggleViewStream);
+    server.on("/TOGGLE_LISTENING", toggleListening);
+    server.on("/TOGGLE_TALKING", toggleTalking);
 
-    // server.begin();
+    server.begin();
 }
 
-void loop() {
-    digitalWrite(33, HIGH);
-    delay(250);
-    digitalWrite(33, LOW);
-    delay(250);
-
-    // server.handleClient();
-}
+void loop() { server.handleClient(); }
 
 void setupCamera() {
     camera_config_t config = setupConfiguration();
@@ -130,61 +125,61 @@ void printData() {
     Serial.println(generatedText);
 }
 
-// void sendMainPage() { server.send(200, "text/html", htmlWebPage); }
-// void sendXmlData() {
-//     // sprintf(buffer, "<V0>%d.%d</V0>\n", (int)(voltsA0),
-//     // abs((int)(voltsA0 * 10) - ((int)(voltsA0)*10)));
-//     // strcat(XML, buffer);
+void sendMainPage() { server.send(200, "text/html", htmlWebPage); }
+void sendXmlData() {
+    // sprintf(buffer, "<V0>%d.%d</V0>\n", (int)(voltsA0),
+    // abs((int)(voltsA0 * 10) - ((int)(voltsA0)*10)));
+    // strcat(XML, buffer);
 
-//     strcpy(XML, "<?xml version = '1.0'?>\n<Data>\n");
+    strcpy(XML, "<?xml version = '1.0'?>\n<Data>\n");
 
-//     if (isShowingStream) {
-//         strcat(XML, "<StreamState>1</StreamState>\n");
-//     } else {
-//         strcat(XML, "<StreamState>0</StreamState>\n");
-//     }
+    if (isShowingStream) {
+        strcat(XML, "<StreamState>1</StreamState>\n");
+    } else {
+        strcat(XML, "<StreamState>0</StreamState>\n");
+    }
 
-//     if (isListening) {
-//         strcat(XML, "<ListeningState>1</ListeningState>\n");
-//     } else {
-//         strcat(XML, "<ListeningState>0</ListeningState>\n");
-//     }
+    if (isListening) {
+        strcat(XML, "<ListeningState>1</ListeningState>\n");
+    } else {
+        strcat(XML, "<ListeningState>0</ListeningState>\n");
+    }
 
-//     if (isTalking) {
-//         strcat(XML, "<TalkingState>1</TalkingState>\n");
-//     } else {
-//         strcat(XML, "<TalkingState>0</TalkingState>\n");
-//     }
+    if (isTalking) {
+        strcat(XML, "<TalkingState>1</TalkingState>\n");
+    } else {
+        strcat(XML, "<TalkingState>0</TalkingState>\n");
+    }
 
-//     strcat(XML, "</Data>\n");
+    strcat(XML, "</Data>\n");
 
-//     server.send(200, "text/xml", XML);
-// }
+    server.send(200, "text/xml", XML);
+}
 
-// void toggleViewStream() {
-//     isShowingStream = !isShowingStream;
-//     isListening = false;
-//     isTalking = false;
+void toggleViewStream() {
+    isShowingStream = !isShowingStream;
+    isListening = false;
+    isTalking = false;
 
-//     server.send(200, "text/plain", "");
-// }
-// void toggleListening() {
-//     isListening = !isListening;
-//     isShowingStream = false;
-//     isTalking = false;
+    server.send(200, "text/plain", "");
+}
+void toggleListening() {
+    isListening = !isListening;
+    isShowingStream = false;
+    isTalking = false;
 
-//     server.send(200, "text/plain", "");
-// }
-// void toggleTalking() {
-//     isTalking = !isTalking;
-//     isShowingStream = false;
-//     isListening = false;
+    server.send(200, "text/plain", "");
+}
+void toggleTalking() {
+    isTalking = !isTalking;
+    isShowingStream = false;
+    isListening = false;
 
-//     server.send(200, "text/plain", "");
-// }
-// void sliderIntensityUpdate() {
-//     String intensityString = server.arg("intensity");
-//     ledIntensity = intensityString.toInt();
+    server.send(200, "text/plain", "");
+}
+void sliderIntensityUpdate() {
+    String intensityString = server.arg("intensity");
+    ledIntensity = intensityString.toInt();
 
-//     server.send(200, "text/plain", "");
-// }
+    server.send(200, "text/plain", "");
+}

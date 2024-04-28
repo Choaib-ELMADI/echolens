@@ -1,10 +1,8 @@
 import cv2
 
-url = "http://192.168.1.103"
+url = "http://192.168.19.202"
 stream = url + ":81/stream"
 cap = cv2.VideoCapture(stream)
-# cap.set(3, 640)  # set width
-# cap.set(4, 480)  # set height
 
 while True:
     _, frame = cap.read()
