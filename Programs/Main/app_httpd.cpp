@@ -55,7 +55,7 @@ static esp_err_t stream_handler(httpd_req_t *req) {
     }
 
     httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
-    httpd_resp_set_hdr(req, "X-Framerate", "60");
+    httpd_resp_set_hdr(req, "X-Framerate", "120");
 
     while (true) {
         fb = esp_camera_fb_get();

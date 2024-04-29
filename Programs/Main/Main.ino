@@ -19,6 +19,13 @@ int ledIntensity = 125;
 char generatedText[30] = "empty";
 uint32_t lastDataMillis = 0;
 
+const uint8_t greenLED = 2;
+const uint8_t yellowLED = 14;
+const long greenLEDInterval = 1000;
+const long yellowLEDInterval = 500;
+unsigned long previousMillisArray[2] = {0, 0};
+bool ledStateArray[2] = {LOW, LOW};
+
 WebServer server(80);
 
 void setupCamera();
@@ -35,6 +42,9 @@ void setup() {
     connectToWiFi();
     Serial.println("Done connect WiFi.");
 
+    pinMode(greenLED, OUTPUT);
+    pinMode(yellowLED, OUTPUT);
+
     server.on("/", sendMainPage);
     server.on("/xml", sendXmlData);
     server.on("/UPDATE_INTENSITY", sliderIntensityUpdate);
@@ -45,7 +55,12 @@ void setup() {
     server.begin();
 }
 
-void loop() { server.handleClient(); }
+void loop() {
+    blinkLED(greenLED, greenLEDInterval, 0);
+    blinkLED(yellowLED, yellowLEDInterval, 1);
+
+    server.handleClient();
+}
 
 void setupCamera() {
     camera_config_t config = setupConfiguration();
@@ -182,4 +197,17 @@ void sliderIntensityUpdate() {
     ledIntensity = intensityString.toInt();
 
     server.send(200, "text/plain", "");
+}
+
+void blinkLED(uint8_t ledPin, long interval, uint8_t ledIndex) {
+    if (millis() - previousMillisArray[ledIndex] >= interval) {
+        previousMillisArray[ledIndex] = millis();
+
+        if (ledStateArray[ledIndex] == LOW)
+            ledStateArray[ledIndex] = HIGH;
+        else
+            ledStateArray[ledIndex] = LOW;
+
+        digitalWrite(ledPin, ledStateArray[ledIndex]);
+    }
 }
