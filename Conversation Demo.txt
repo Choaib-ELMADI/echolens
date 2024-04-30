@@ -1,0 +1,14 @@
+Person 1: Hello!
+Person 2: Hello! How are you?
+
+Person 1: I'm good, thanks! How about you?
+Person 2: I'm doing alright, just hanging in there.
+
+Person 1: Cool. Anything exciting happening lately?
+Person 2: Not really, just the usual stuff. How about you?
+
+Person 1: Same here, nothing much going on. Just trying to stay busy.
+Person 2: Yeah, I hear you. Well, it's nice chatting with you.
+
+Person 1: Yeah, you too! Take care!
+Person 2: You too, bye!
