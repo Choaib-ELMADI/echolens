@@ -1,4 +1,12 @@
-thumsup
-thumsdown
-thankyou
-livelong
+You
+Yes
+WhatAreYouDoing
+TryBeing
+ToMeet
+ThankYou
+TakeCare
+SameAsYou
+Question
+Point
+Nothing
+IHear
