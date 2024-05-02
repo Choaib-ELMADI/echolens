@@ -1,7 +1,21 @@
-path: ../drive/MyDrive/Datasets/Sign_Language
+path: ../drive/MyDrive/Datasets/ASL_Sign_Language
 train: ../train/images
 val: ../valid/images
 test: ../test/images
 
-nc: 4
-names: ["thumsup", "thumsdown", "thankyou", "livelong"]
+nc: 12
+names:
+  [
+    "You",
+    "Yes",
+    "WhatAreYouDoing",
+    "TryBeing",
+    "ToMeet",
+    "ThankYou",
+    "TakeCare",
+    "SameAsYou",
+    "Question",
+    "Point",
+    "Nothing",
+    "IHear",
+  ]
