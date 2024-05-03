@@ -4,11 +4,24 @@ import os
 import cv2
 import math
 
-weight_path = os.path.join("Weights", "best__200epochs.pt")
+weight_path = os.path.join("Train Results", "weights", "best.pt")
 model = YOLO(weight_path)
 last_boxes = []
 
-classNames = ["thumsup", "thumsdown", "thankyou", "livelong"]
+classNames = [
+    "You",
+    "Yes",
+    "WhatAreYouDoing",
+    "TryBeing",
+    "ToMeet",
+    "ThankYou",
+    "TakeCare",
+    "SameAsYou",
+    "Question",
+    "Point",
+    "Nothing",
+    "IHear",
+]
 text_background = (198, 63, 88)
 corner_color = (53, 53, 249)
 text_color = (239, 239, 239)
@@ -16,7 +29,7 @@ border_color = (61, 147, 8)
 text_message = ""
 list_message = []
 
-stream_url = 0  # "http://192.168.169.196:81/stream"
+stream_url = "http://192.168.169.196:81/stream"  # 0
 cap = cv2.VideoCapture(stream_url)
 
 frame_counter = 0
@@ -39,6 +52,9 @@ while True:
 
                 if classNames[class_id] not in list_message:
                     list_message.append(classNames[class_id])
+
+                if len(list_message) % 5 == 0:
+                    list_message.append("\n")
 
     for box, conf, class_id in last_boxes:
         if len(list_message) > 0:

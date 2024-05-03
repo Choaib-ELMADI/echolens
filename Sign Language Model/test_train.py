@@ -28,7 +28,7 @@ border_color = (61, 147, 8)
 text_message = ""
 list_message = []
 
-stream_url = 0  # "http://192.168.169.196:81/stream"
+stream_url = "http://192.168.169.196:81/stream"  # 0
 cap = cv2.VideoCapture(stream_url)
 
 frame_counter = 0
