@@ -16,7 +16,7 @@ def move_txt_files(images_folder, labels_folder):
 
 if __name__ == "__main__":
     data_folder = "Data 1"
-    set_name = "valid"
+    set_name = "train"
     data_path = f"C:\\Users\\Choaib ELMADI\\Downloads\\D.I.F.Y\\Electronics\\Robotics\\6- EchoLens\\Sign Language Model\\{ data_folder }\\{ set_name }\\"
     images_folder = data_path + "images"
     labels_folder = data_path + "labels"
