@@ -1,10 +1,10 @@
 task: detect
 mode: train
 model: yolov8n.pt
-data: ../content/drive/MyDrive/Datasets/Sign_Language/data.yaml
-epochs: 200
+data: ../content/drive/MyDrive/Datasets/ASL_Sign_Language/data.yaml
+epochs: 400
 time: null
-patience: 100
+patience: 0
 batch: 16
 imgsz: 640
 save: true
