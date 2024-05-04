@@ -1,4 +1,5 @@
-Sign*Language*Model/.ipynb_checkpoints/
+__pycache__
+.ipynb_checkpoints
 
 Sign*Language*Model/Data*1/test/labels/*
 Sign*Language*Model/Data*2/test/labels/*
@@ -26,3 +27,4 @@ Sign*Language*Model/Data*Unused/test/*
 Sign*Language*Model/Data*Unused/
 
 Sign*Language*Model/SignLangVenv/
+Sign*Language*Model*(DLM)/SignLangVenvDLM/
