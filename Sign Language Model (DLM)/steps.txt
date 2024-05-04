@@ -11,3 +11,7 @@
 5. Setup Folders for Collection:
 
 6. Collect MP Keypoints:
+
+7. Preprocess Data and Create Labels and Features:
+
+8. Build and Train LSTM Neural Network:

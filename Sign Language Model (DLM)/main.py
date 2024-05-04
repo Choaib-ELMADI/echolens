@@ -1,9 +1,15 @@
 from matplotlib import pyplot as plt
 import mediapipe as mp
 import numpy as np
-import time
 import cv2
 import os
+
+from sklearn.model_selection import train_test_split  # type: ignore
+from tensorflow.keras.utils import to_categorical  # type: ignore
+from tensorflow.keras.models import Sequential  # type: ignore
+from tensorflow.keras.layers import LSTM, Dense  # type: ignore
+from tensorflow.keras.callbacks import TensorBoard  # type: ignore
+
 from utils import *
 
 DATA_PATH = os.path.join("Data")
