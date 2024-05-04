@@ -1,0 +1,13 @@
+0. Installation:
+
+1. Import Libraries:
+
+2. Read the Camera Feed:
+
+3. Keypoints with MP Holistic:
+
+4. Extract Keypoints Values:
+
+5. Setup Folders for Collection:
+
+6. Collect MP Keypoints:
