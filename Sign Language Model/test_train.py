@@ -4,7 +4,7 @@ import os
 import cv2
 import math
 
-weight_path = os.path.join("Train Results", "weights", "best.pt")
+weight_path = os.path.join("Train Results (1000epochs)", "weights", "best.pt")
 model = YOLO(weight_path)
 
 classNames = [
@@ -28,7 +28,7 @@ border_color = (61, 147, 8)
 text_message = ""
 list_message = []
 
-stream_url = "http://192.168.169.196:81/stream"  # 0
+stream_url = 0  # "http://192.168.169.196:81/stream"  # 0
 cap = cv2.VideoCapture(stream_url)
 
 frame_counter = 0
@@ -53,8 +53,8 @@ while True:
             )
             cvzone.putTextRect(
                 frame,
-                classNames[class_id],
-                (x1, y1 - 5),
+                f"{classNames[class_id]} - {conf}",
+                (x1, y1 - 30),
                 scale=1,
                 thickness=1,
                 colorT=text_color,

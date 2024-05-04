@@ -4,7 +4,7 @@ import os
 import cv2
 import math
 
-weight_path = os.path.join("Train Results", "weights", "best.pt")
+weight_path = os.path.join("Train Results (1000epochs)", "weights", "best.pt")
 model = YOLO(weight_path)
 last_boxes = []
 
@@ -29,7 +29,7 @@ border_color = (61, 147, 8)
 text_message = ""
 list_message = []
 
-stream_url = "http://192.168.169.196:81/stream"  # 0
+stream_url = 0  # "http://192.168.169.196:81/stream"  # 0
 cap = cv2.VideoCapture(stream_url)
 
 frame_counter = 0
@@ -53,26 +53,29 @@ while True:
                 if classNames[class_id] not in list_message:
                     list_message.append(classNames[class_id])
 
-                if len(list_message) % 5 == 0:
+                if len(list_message) % 4 == 0:
                     list_message.append("\n")
 
     for box, conf, class_id in last_boxes:
         if len(list_message) > 0:
             text_message = " ".join(list_message)
-            cvzone.putTextRect(
-                frame,
-                f"{text_message}",
-                # pos=(max(8, x1 + 6), max(23, y1 - 12)),
-                pos=(30, 30),
-                scale=1,
-                thickness=1,
-                colorT=text_color,
-                colorR=text_background,
-                font=cv2.FONT_HERSHEY_COMPLEX_SMALL,
-                offset=8,
-                border=1,
-                colorB=text_color,
-            )
+            y0, dy = 50, 50
+            for i, line in enumerate(text_message.split("\n")):
+                y = y0 + i * dy
+                cvzone.putTextRect(
+                    frame,
+                    f"{line}",
+                    # pos=(max(8, x1 + 6), max(23, y1 - 12)),
+                    pos=(30, y),
+                    scale=1,
+                    thickness=1,
+                    colorT=text_color,
+                    colorR=text_background,
+                    font=cv2.FONT_HERSHEY_COMPLEX_SMALL,
+                    offset=8,
+                    border=1,
+                    colorB=text_color,
+                )
 
     cv2.imshow("Frame", frame)
 
