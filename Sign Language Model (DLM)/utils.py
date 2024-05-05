@@ -4,6 +4,7 @@ import cv2
 
 mp_holistic = mp.solutions.holistic  # type: ignore
 mp_drawing = mp.solutions.drawing_utils  # type: ignore
+mp_hands = mp.solutions.hands  # type: ignore
 
 
 def mediapipe_detections(frame, model):
@@ -17,18 +18,9 @@ def mediapipe_detections(frame, model):
 
 
 def draw_landmarks(frame, results, color):
-    mp_drawing.draw_landmarks(
-        frame,
-        results.left_hand_landmarks,
-        mp_holistic.HAND_CONNECTIONS,
-        mp_drawing.DrawingSpec(color=color, thickness=2, circle_radius=2),
-    )
-    mp_drawing.draw_landmarks(
-        frame,
-        results.right_hand_landmarks,
-        mp_holistic.HAND_CONNECTIONS,
-        mp_drawing.DrawingSpec(color=color, thickness=2, circle_radius=2),
-    )
+    if results.multi_hand_landmarks:
+        for hand_landmarks in results.multi_hand_landmarks:
+            mp_drawing.draw_landmarks(frame, hand_landmarks, mp_hands.HAND_CONNECTIONS)
 
 
 def extract_keypoints(results):
