@@ -4,7 +4,7 @@ import os
 import cv2
 import math
 
-weight_path = os.path.join("Train Results (1000epochs)", "weights", "best.pt")
+weight_path = os.path.join("train", "weights", "best.pt")
 model = YOLO(weight_path)
 last_boxes = []
 
@@ -29,7 +29,7 @@ border_color = (61, 147, 8)
 text_message = ""
 list_message = []
 
-stream_url = 0  # "http://192.168.169.196:81/stream"  # 0
+stream_url = "http://192.168.169.196:81/stream"
 cap = cv2.VideoCapture(stream_url)
 
 frame_counter = 0

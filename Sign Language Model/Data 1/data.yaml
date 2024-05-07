@@ -1,4 +1,4 @@
-path: ../drive/MyDrive/Datasets/ASL_Sign_Language
+path: ../drive/MyDrive/Datasets/Augmented_ASL_Sign_Language
 train: ../train/images
 val: ../valid/images
 test: ../test/images
