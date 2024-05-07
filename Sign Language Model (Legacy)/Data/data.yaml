@@ -1,0 +1,21 @@
+path: ../drive/MyDrive/Datasets/Augmented_ASL_Sign_Language
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 12
+names:
+  [
+    "You",
+    "Yes",
+    "WhatAreYouDoing",
+    "TryBeing",
+    "ToMeet",
+    "ThankYou",
+    "TakeCare",
+    "SameAsYou",
+    "Question",
+    "Point",
+    "Nothing",
+    "IHear",
+  ]
