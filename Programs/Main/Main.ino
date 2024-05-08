@@ -4,20 +4,14 @@
 #include <WebServer.h>
 #include <WiFi.h>
 
-// const char *ssid = "TL-MR110  5G";
 const char *ssid = "Choaibs-Phone";
-// const char *password = "UMRA2024";
 const char *password = "devchoaib";
 
-char XML[1024];
-char buffer[32];
-
-bool isShowingStream = false;
 bool isListening = false;
 bool isTalking = false;
-int ledIntensity = 125;
-char generatedText[30] = "empty";
-uint32_t lastDataMillis = 0;
+String signTextData = "";
+unsigned long lastDataMillis = 0;
+const uint8_t delayTime = 250;
 
 const uint8_t greenLED = 2;
 const uint8_t yellowLED = 14;
@@ -33,6 +27,9 @@ camera_config_t setupConfiguration();
 void connectToWiFi();
 void startCameraServer();
 
+/**********************************/
+/*             MAIN               */
+/**********************************/
 void setup() {
     Serial.begin(115200);
 
@@ -46,22 +43,27 @@ void setup() {
     pinMode(yellowLED, OUTPUT);
 
     server.on("/", sendMainPage);
-    server.on("/xml", sendXmlData);
-    server.on("/UPDATE_INTENSITY", sliderIntensityUpdate);
-    server.on("/TOGGLE_VIEW_STREAM", toggleViewStream);
     server.on("/TOGGLE_LISTENING", toggleListening);
     server.on("/TOGGLE_TALKING", toggleTalking);
+    server.on("/SIGN_TEXT_DATA", sendSignTextData);
 
     server.begin();
 }
-
 void loop() {
-    blinkLED(greenLED, greenLEDInterval, 0);
-    blinkLED(yellowLED, yellowLEDInterval, 1);
+    if (millis() - lastDataMillis >= delayTime) {
+        lastDataMillis = millis();
+
+        blinkLED(greenLED, greenLEDInterval, 0);
+        blinkLED(yellowLED, yellowLEDInterval, 1);
+        printData();
+    }
 
     server.handleClient();
 }
 
+/**********************************/
+/*         WIFI & CAMERA          */
+/**********************************/
 void setupCamera() {
     camera_config_t config = setupConfiguration();
 
@@ -123,82 +125,46 @@ void connectToWiFi() {
     Serial.println("' to connect");
 }
 
+/**********************************/
+/*          DEBUGINNING           */
+/**********************************/
 void printData() {
-    Serial.print("Showing stream: ");
-    Serial.print(isShowingStream);
-
-    Serial.print(", Listening: ");
+    Serial.print("Listening: ");
     Serial.print(isListening);
 
     Serial.print(", Talking: ");
     Serial.print(isTalking);
 
-    Serial.print(", Intensity: ");
-    Serial.print(ledIntensity);
-
-    Serial.print(", Text: ");
-    Serial.println(generatedText);
+    Serial.print(", data: ");
+    Serial.println(signTextData);
 }
 
+/**********************************/
+/*        RENDER WEBPAGE          */
+/**********************************/
 void sendMainPage() { server.send(200, "text/html", htmlWebPage); }
-void sendXmlData() {
-    // sprintf(buffer, "<V0>%d.%d</V0>\n", (int)(voltsA0),
-    // abs((int)(voltsA0 * 10) - ((int)(voltsA0)*10)));
-    // strcat(XML, buffer);
 
-    strcpy(XML, "<?xml version = '1.0'?>\n<Data>\n");
-
-    if (isShowingStream) {
-        strcat(XML, "<StreamState>1</StreamState>\n");
-    } else {
-        strcat(XML, "<StreamState>0</StreamState>\n");
-    }
-
-    if (isListening) {
-        strcat(XML, "<ListeningState>1</ListeningState>\n");
-    } else {
-        strcat(XML, "<ListeningState>0</ListeningState>\n");
-    }
-
-    if (isTalking) {
-        strcat(XML, "<TalkingState>1</TalkingState>\n");
-    } else {
-        strcat(XML, "<TalkingState>0</TalkingState>\n");
-    }
-
-    strcat(XML, "</Data>\n");
-
-    server.send(200, "text/xml", XML);
-}
-
-void toggleViewStream() {
-    isShowingStream = !isShowingStream;
-    isListening = false;
-    isTalking = false;
-
-    server.send(200, "text/plain", "");
-}
+/**********************************/
+/*      COMMUNICATION HERE        */
+/**********************************/
 void toggleListening() {
-    isListening = !isListening;
-    isShowingStream = false;
-    isTalking = false;
-
+    String listeningState = server.arg("state");
+    isListening = listeningState.toInt();
     server.send(200, "text/plain", "");
 }
 void toggleTalking() {
-    isTalking = !isTalking;
-    isShowingStream = false;
-    isListening = false;
-
+    String talkingState = server.arg("state");
+    isTalking = talkingState.toInt();
     server.send(200, "text/plain", "");
 }
-void sliderIntensityUpdate() {
-    String intensityString = server.arg("intensity");
-    ledIntensity = intensityString.toInt();
-
-    server.send(200, "text/plain", "");
+void sendSignTextData() {
+    signTextData = server.arg("data");
+    server.send(200, "text/plain", signTextData);
 }
 
+/**********************************/
+/*         FUNCTIONS HERE         */
+/**********************************/
 void blinkLED(uint8_t ledPin, long interval, uint8_t ledIndex) {
     if (millis() - previousMillisArray[ledIndex] >= interval) {
         previousMillisArray[ledIndex] = millis();

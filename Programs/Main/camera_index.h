@@ -54,9 +54,9 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                     }
 
                     &.light {
-                        --back: #9d9999;
+                        --back: #c3bdbd;
                         --text: #181818;
-                        --second__back: #c3bdbd;
+                        --second__back: #9d9999;
                         --second__text: #272727;
                     }
 
@@ -105,59 +105,6 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                                     );
                                     background-clip: text;
                                     color: transparent;
-                                }
-
-                                .toggle-container {
-                                    color: var(--second__text);
-                                    font-weight: 700;
-                                    font-size: 1.5rem;
-                                    display: flex;
-                                    user-select: none;
-
-                                    .toggle {
-                                        width: 22px;
-                                        height: 3rem;
-                                        background: var(--red);
-                                        border-radius: 11px;
-                                        padding: 2px;
-                                        cursor: pointer;
-                                        display: flex;
-                                        justify-content: center;
-                                        transition: background 300ms 300ms;
-
-                                        .toggle__circle {
-                                            width: 18px;
-                                            height: 18px;
-                                            background: var(--text);
-                                            border-radius: 50%;
-                                            margin-top: calc(3rem - 22px);
-                                            transition: margin 500ms ease-in-out;
-                                        }
-                                    }
-
-                                    .toggle-text {
-                                        display: flex;
-                                        flex-direction: column;
-                                        line-height: 1.5rem;
-                                        margin-left: 1px;
-
-                                        background: linear-gradient(
-                                            to bottom,
-                                            var(--text),
-                                            var(--second__text),
-                                            var(--text)
-                                        );
-                                        background-clip: text;
-                                        color: transparent;
-                                    }
-
-                                    #show-hide-image:checked + .toggle {
-                                        background: var(--green);
-
-                                        & > .toggle__circle {
-                                            margin-top: 0.5px;
-                                        }
-                                    }
                                 }
                             }
 
@@ -370,7 +317,8 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                                 }
                             }
 
-                            .speech.control {
+                            .speech.control,
+                            .signs.control {
                                 grid-column: 1 / -1;
 
                                 p {
@@ -432,35 +380,6 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                             }
                         }
 
-                        .stream-container {
-                            display: flex;
-                            flex-direction: column;
-                            gap: 0.5rem;
-                            align-items: center;
-                            margin-top: 3rem;
-
-                            .image-container {
-                                width: 100%;
-                                max-width: 600px;
-                                aspect-ratio: 1.5 / 1;
-                                background: var(--back);
-                                border-radius: 8px;
-                                overflow: hidden;
-
-                                img {
-                                    background: var(--back);
-                                    width: 100%;
-                                    height: 100%;
-                                    object-fit: cover;
-                                }
-                            }
-
-                            .led-intensity-slider {
-                                width: 100%;
-                                max-width: 600px;
-                            }
-                        }
-
                         footer {
                             width: 100%;
                             max-width: 600px;
@@ -473,20 +392,26 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                             flex-direction: column;
                             align-items: center;
 
-                            p {
-                                width: 100%;
-                                max-width: max-content;
-                                font-size: var(--medium);
-                                font-weight: bold;
-                                background: linear-gradient(
-                                    to right,
-                                    var(--red),
-                                    var(--purple),
-                                    var(--red)
-                                );
-                                background-clip: text;
-                                color: transparent;
-                                user-select: none;
+                            div {
+                                background: var(--back);
+                                border-radius: var(--small);
+                                padding: 0.75rem 1.25rem;
+
+                                p {
+                                    width: 100%;
+                                    max-width: max-content;
+                                    font-size: var(--medium);
+                                    font-weight: bold;
+                                    background: linear-gradient(
+                                        to right,
+                                        var(--red),
+                                        var(--purple),
+                                        var(--red)
+                                    );
+                                    background-clip: text;
+                                    color: transparent;
+                                    user-select: none;
+                                }
                             }
                         }
                     }
@@ -511,21 +436,6 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                         <h1 class="slogan">
                             EchoLens - Your Personalized Gateway to a Beautiful Life.
                         </h1>
-                        <div class="toggle-container">
-                            <input
-                                hidden
-                                id="show-hide-image"
-                                name="show-hide-image"
-                                type="checkbox"
-                            />
-                            <label class="toggle" for="show-hide-image">
-                                <div class="toggle__circle"></div>
-                            </label>
-                            <div class="toggle-text">
-                                <span>N</span>
-                                <span>F</span>
-                            </div>
-                        </div>
                     </div>
                     <div class="page-header__bottom">
                         <div class="mode-toggle-container">
@@ -596,156 +506,148 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                             <span></span>
                         </div>
                     </div>
-                    <div class="speech control">
-                        <p id="generated-text" class="generated-text">
+                    <div class="speech control" id="speech-container">
+                        <p id="generated-text-container" class="generated-text-container">
                             <span>He/She said: </span>
                             <span>"</span>
-                            <span id="generated-text-container">Hello...</span>
+                            <span id="generated-text">Hello...</span>
                             <span>"</span>
                         </p>
                         <div class="buttons-container">
-                            <button class="generate-text" id="generate-text">Generate</button>
                             <button class="clear-generated-text" id="clear-generated-text">
                                 Clear
                             </button>
                         </div>
                     </div>
-                </div>
-
-                <div id="stream-container" class="stream-container">
-                    <div class="image-container">
-                        <img id="stream-image" src="/" alt="** Stream Image **" />
+                    <div class="signs control" id="signs-container">
+                        <p id="sign-text-container" class="sign-text-container">
+                            <span>You said: </span>
+                            <span>"</span>
+                            <span id="sign-text">Hello...</span>
+                            <span>"</span>
+                        </p>
+                        <div class="buttons-container">
+                            <button class="clear-sign-text" id="clear-sign-text">Clear</button>
+                            <button class="play-sign-text" id="play-sign-text">Play</button>
+                        </div>
                     </div>
-                    <input
-                        type="range"
-                        min="0"
-                        max="255"
-                        value="125"
-                        class="led-intensity-slider"
-                        id="led-intensity-slider"
-                    />
                 </div>
 
                 <footer>
-                    <p>EchoLens | Smart Device - By Alpha-Amps</p>
+                    <div>
+                        <p>EchoLens | Smart Device - By Alpha-Amps</p>
+                    </div>
                 </footer>
             </section>
             <script>
                 document.onreadystatechange = function () {
                     if (document.readyState == "complete") {
+                        //===>
                         let baseHost = document.location.origin;
-                        let streamUrl = baseHost + ":81/stream";
-                        var xmlHttp = createXMLHttpObject();
 
-                        /***** IMAGE GROUP (1) *****/
-                        const imageCheckbox = document.getElementById("show-hide-image");
-                        const viewStream = document.getElementById("stream-image");
-                        viewStream.src = streamUrl;
-                        const viewStreamContainer =
-                            document.getElementById("stream-container");
-                        const ledIntensitySlider = document.getElementById(
-                            "led-intensity-slider"
-                        );
-
-                        /***** LISTENING GROUP (1) *****/
+                        //===>
                         const listeningCheckbox = document.getElementById("toggle-listening");
                         const listeningIndicator = document.getElementById(
                             "listening-indicator"
                         );
-                        let audioURL = null;
-                        let chunks = [];
-                        let recorder = null;
-                        let canRecord = false;
 
-                        /***** TALKING GROUP (1) *****/
+                        //===>
                         const talkingCheckbox = document.getElementById("toggle-talking");
                         const talkingIndicator = document.getElementById("talking-indicator");
 
-                        /***** TEXT GROUP (1) *****/
-                        const generatedTextContainer = document.getElementById(
-                            "generated-text-container"
-                        );
-                        const clearGeneratedTextButton = document.getElementById(
+                        //===>
+                        const speechContainer = document.getElementById("speech-container");
+                        const generatedTextContainer =
+                            document.getElementById("generated-text");
+                        const clearGeneratedTextBtn = document.getElementById(
                             "clear-generated-text"
                         );
-                        const generateTextButton = document.getElementById("generate-text");
-                        let generatedText = null;
-                        let isGenerating = false;
+                        let generatedText = "";
+                        let recognition = null;
 
-                        /***** DARK/LIGHT MODE (1) *****/
+                        //===>
+                        const signsContainer = document.getElementById("signs-container");
+                        const signTextContainer = document.getElementById("sign-text");
+                        const clearSignTextBtn = document.getElementById("clear-sign-text");
+                        const playSignTextBtn = document.getElementById("play-sign-text");
+                        let signText = "";
+
+                        //===>
                         const toggleDarkLightMode =
                             document.getElementById("dark-light-mode");
                         const currentMode = document.getElementById("dark-light-curr-mode");
 
-                        /* ========================================================================================= */
+                        //* ========================================================================================= *//
 
-                        /***** IMAGE GROUP (2) *****/
-                        handleCheckboxChange(imageCheckbox, viewStreamContainer);
-                        imageCheckbox.addEventListener("change", () => {
-                            listeningCheckbox.checked = false;
-                            talkingCheckbox.checked = false;
-
-                            handleCheckboxChange(listeningCheckbox, listeningIndicator);
-                            handleCheckboxChange(talkingCheckbox, talkingIndicator);
-                            handleCheckboxChange(imageCheckbox, viewStreamContainer);
-
-                            handleToggleViewStream();
-                        });
-                        handleSliderIntensityUpdate();
-                        ledIntensitySlider.oninput = handleSliderIntensityUpdate;
-
-                        /***** LISTENING GROUP (2) *****/
-                        setUpAudio();
+                        //===>
+                        setUpSpeech("en-US");
+                        handleShowText(generatedText);
+                        handleToggleListening(0);
                         handleCheckboxChange(listeningCheckbox, listeningIndicator);
                         listeningCheckbox.addEventListener("change", () => {
-                            imageCheckbox.checked = false;
+                            handleCheckboxChange(listeningCheckbox, listeningIndicator);
+
                             talkingCheckbox.checked = false;
-
-                            handleCheckboxChange(imageCheckbox, viewStreamContainer);
-                            handleCheckboxChange(listeningCheckbox, listeningIndicator);
                             handleCheckboxChange(talkingCheckbox, talkingIndicator);
 
-                            if (canRecord && listeningCheckbox.checked) recorder.start();
-                            else recorder.stop();
+                            if (listeningCheckbox.checked) {
+                                console.log("Stoped Talking.");
+                                handleToggleTalking(0);
 
-                            handleToggleListening();
-                        });
-
-                        /***** TALKING GROUP (2) *****/
-                        handleCheckboxChange(talkingCheckbox, talkingIndicator);
-                        talkingCheckbox.addEventListener("change", () => {
-                            imageCheckbox.checked = false;
-                            listeningCheckbox.checked = false;
-
-                            handleCheckboxChange(imageCheckbox, viewStreamContainer);
-                            handleCheckboxChange(listeningCheckbox, listeningIndicator);
-                            handleCheckboxChange(talkingCheckbox, talkingIndicator);
-
-                            handleToggleTalking();
-                        });
-
-                        /***** TEXT GROUP (2) *****/
-                        updateButtonsState();
-                        clearGeneratedTextButton.addEventListener(
-                            "click",
-                            handleClearButtonClick
-                        );
-                        generateTextButton.addEventListener("click", async () => {
-                            try {
-                                isGenerating = true;
-                                updateButtonsState();
-                                const transcription = await generateText(audioURL, "en-US");
-                                console.log("Transcription:", transcription);
-                            } catch (error) {
-                                console.error("Error: ", error);
-                            } finally {
-                                isGenerating = false;
-                                audioURL = null;
-                                updateButtonsState();
+                                generatedText = "";
+                                handleShowText(generatedText);
+                                console.log("Listening...");
+                                handleToggleListening(1);
+                                recognition.start();
+                            } else {
+                                console.log("Stoped Listening.");
+                                handleToggleListening(0);
+                                recognition.stop();
                             }
                         });
 
-                        /***** DARK/LIGHT MODE (2) *****/
+                        //===>
+                        handleToggleTalking(0);
+                        handleCheckboxChange(talkingCheckbox, talkingIndicator);
+                        talkingCheckbox.addEventListener("change", () => {
+                            handleCheckboxChange(talkingCheckbox, talkingIndicator);
+
+                            listeningCheckbox.checked = false;
+                            handleCheckboxChange(listeningCheckbox, listeningIndicator);
+
+                            if (talkingCheckbox.checked) {
+                                console.log("Stoped Listening.");
+                                handleToggleListening(0);
+                                recognition.stop();
+
+                                console.log("Talking...");
+                                handleToggleTalking(1);
+                            } else {
+                                console.log("Stoped Talking.");
+                                handleToggleTalking(0);
+                            }
+                        });
+
+                        //===>
+                        clearGeneratedTextBtn.addEventListener("click", () => {
+                            console.log("Text cleared");
+                            generatedText = "";
+                            handleShowText(generatedText);
+                        });
+
+                        //===>
+                        fetchSignTextFromESP32CAM();
+                        handleShowSignText(signText);
+                        clearSignTextBtn.addEventListener("click", () => {
+                            console.log("Text cleared");
+                            signText = "";
+                            handleShowSignText(signText);
+                        });
+                        playSignTextBtn.addEventListener("click", () => {
+                            playSignText();
+                        });
+
+                        //===>
                         toggleDarkLightMode.addEventListener("change", () => {
                             document.body.classList.toggle("light");
 
@@ -756,54 +658,16 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                             }
                         });
 
+                        //===>
                         process();
 
-                        /*****  FUNCTIONS HERE  *****/
+                        //* ========================================================================================= *//
 
-                        function createXMLHttpObject() {
-                            if (window.XMLHttpRequest) {
-                                xmlHttp = new XMLHttpRequest();
-                            } else {
-                                xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-                            }
-                            return xmlHttp;
-                        }
-
-                        function setUpAudio() {
-                            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                                navigator.mediaDevices
-                                    .getUserMedia({ audio: true })
-                                    .then((stream) => {
-                                        recorder = new MediaRecorder(stream);
-
-                                        recorder.ondataavailable = (e) => {
-                                            chunks.push(e.data);
-                                        };
-
-                                        recorder.onstop = (e) => {
-                                            if (chunks.length > 0) {
-                                                const blob = new Blob(chunks, {
-                                                    type: "audio/ogg; codecs=opus",
-                                                });
-                                                chunks = [];
-                                                audioURL = window.URL.createObjectURL(blob);
-                                                updateButtonsState();
-                                            }
-                                        };
-
-                                        canRecord = true;
-                                    })
-                                    .catch((err) => console.log(err));
-                            }
-                        }
-                        async function generateText(audioURL, lang) {
-                            const recognition = new webkitSpeechRecognition();
+                        function setUpSpeech(lang) {
+                            recognition = new webkitSpeechRecognition();
                             recognition.continuous = true;
-                            recognition.interimResults = false;
+                            recognition.interimResults = true;
                             recognition.lang = lang;
-                            recognition.src = audioURL;
-
-                            recognition.start();
 
                             return new Promise((resolve, reject) => {
                                 recognition.onresult = function (event) {
@@ -820,44 +684,92 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                                         }
                                     }
 
-                                    console.log("Final transcript: ", finalTranscript);
-                                    resolve(finalTranscript);
+                                    generatedText = finalTranscript;
+                                    handleShowText(generatedText);
                                 };
 
                                 recognition.onerror = function (event) {
                                     console.error("Speech recognition error: ", event.error);
+                                    listeningCheckbox.checked = false;
+                                    handleCheckboxChange(listeningCheckbox, listeningIndicator);
+                                    handleToggleListening(0);
                                     reject(event.error);
                                 };
 
                                 recognition.onend = function () {
-                                    console.log("Speech recognition ended");
+                                    console.log("Speech recognition ended.");
+                                    listeningCheckbox.checked = false;
+                                    handleToggleListening(0);
+                                    handleCheckboxChange(listeningCheckbox, listeningIndicator);
                                 };
+
+                                resolve();
                             });
                         }
 
-                        function handleToggleViewStream() {
-                            let xhttp = new XMLHttpRequest();
-                            xhttp.open("PUT", "TOGGLE_VIEW_STREAM", false);
-                            xhttp.send();
+                        function fetchSignTextFromESP32CAM() {
+                            fetch(baseHost + "/SIGN_TEXT_DATA")
+                                .then((response) => response.text())
+                                .then((data) => {
+                                    console.log(data);
+                                    signText = data;
+                                    handleShowSignText(signText);
+                                })
+                                .catch((error) => {
+                                    signText = "";
+                                    handleShowSignText(signText);
+                                });
                         }
-                        function handleToggleListening() {
-                            let xhttp = new XMLHttpRequest();
-                            xhttp.open("PUT", "TOGGLE_LISTENING", false);
-                            xhttp.send();
+                        function playSignText() {
+                            console.log(`Playing ${signText}`);
                         }
-                        function handleToggleTalking() {
-                            let xhttp = new XMLHttpRequest();
-                            xhttp.open("PUT", "TOGGLE_TALKING", false);
-                            xhttp.send();
+
+                        function handleShowText(generatedText) {
+                            if (generatedText) {
+                                generatedTextContainer.innerText = generatedText;
+                                speechContainer.style.display = "flex";
+                            } else {
+                                speechContainer.style.display = "none";
+                            }
                         }
-                        function handleSliderIntensityUpdate() {
-                            let xhttp = new XMLHttpRequest();
-                            xhttp.open(
-                                "PUT",
-                                "UPDATE_INTENSITY?intensity=" + this.value,
-                                false
-                            );
-                            xhttp.send();
+                        function handleShowSignText(signText) {
+                            if (signText) {
+                                signTextContainer.innerText = generatedText;
+                                signsContainer.style.display = "flex";
+                            } else {
+                                signsContainer.style.display = "none";
+                            }
+                        }
+
+                        function handleToggleListening(listeningState) {
+                            // let xhttp = new XMLHttpRequest();
+                            // xhttp.open(
+                            // 	"PUT",
+                            // 	"TOGGLE_LISTENING?state=" + listeningState,
+                            // 	false
+                            // );
+                            // xhttp.send();
+                            console.log(listeningState);
+                        }
+                        function handleToggleTalking(talkingState) {
+                            // let xhttp = new XMLHttpRequest();
+                            // xhttp.open("PUT", "TOGGLE_TALKING?state=" + talkingState, false);
+                            // xhttp.send();
+                            console.log(talkingState);
+                        }
+
+                        function hide(el) {
+                            el.style.display = "none";
+                        }
+                        function show(el) {
+                            el.style.display = "flex";
+                        }
+                        function handleCheckboxChange(checkboxEl, el) {
+                            if (checkboxEl.checked) {
+                                show(el);
+                            } else {
+                                hide(el);
+                            }
                         }
 
                         function updateDateTime() {
@@ -871,79 +783,8 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                                 { hour12: false }
                             )}`;
                         }
-
-                        function updateButtonsState() {
-                            if (!audioURL) {
-                                generateTextButton.style.display = "none";
-                            } else {
-                                generateTextButton.style.display = "block";
-
-                                if (isGenerating) {
-                                    generateTextButton.innerText = "Generating...";
-                                } else {
-                                    generateTextButton.innerText = "Generate";
-                                }
-                            }
-
-                            if (!generatedText) {
-                                clearGeneratedTextButton.style.display = "none";
-                            } else {
-                                clearGeneratedTextButton.style.display = "block";
-                            }
-                        }
-
-                        function hide(el) {
-                            el.style.display = "none";
-                        }
-                        function show(el) {
-                            el.style.display = "flex";
-                        }
-
-                        function handleCheckboxChange(checkboxEl, el) {
-                            if (checkboxEl.checked) {
-                                show(el);
-                            } else {
-                                hide(el);
-                            }
-                        }
-
-                        function handleClearButtonClick() {
-                            generatedTextContainer.innerText = ".....";
-                        }
-
-                        function response() {
-                            let xmlResponse;
-                            let xmlDoc;
-                            let message;
-
-                            xmlResponse = xmlHttp.responseXML;
-                            console.log(xmlResponse);
-
-                            /* xmlDoc = xmlResponse.getElementsByTagName("StreamState");
-                            message = xmlDoc[0].firstChild.nodeValue;
-                            if (message == 0) imageCheckbox.checked = false;
-                            else imageCheckbox.checked = true;
-
-                            xmlDoc = xmlResponse.getElementsByTagName("ListeningState");
-                            message = xmlDoc[0].firstChild.nodeValue;
-                            if (message == 0) listeningCheckbox.checked = false;
-                            else listeningCheckbox.checked = true;
-
-                            xmlDoc = xmlResponse.getElementsByTagName("TalkingState");
-                            message = xmlDoc[0].firstChild.nodeValue;
-                            if (message == 0) talkingCheckbox.checked = false;
-                            else talkingCheckbox.checked = true; */
-                        }
-
                         function process() {
                             updateDateTime();
-
-                            if (xmlHttp.readyState == 0 || xmlHttp.readyState == 4) {
-                                xmlHttp.open("PUT", "xml", true);
-                                xmlHttp.onreadystatechange = response;
-                                xmlHttp.send(null);
-                            }
-
                             setTimeout(process, 40);
                         }
                     }
