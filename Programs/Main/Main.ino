@@ -159,7 +159,7 @@ void toggleTalking() {
 }
 void sendSignTextData() {
     signTextData = server.arg("data");
-    server.send(200, "text/plain", signTextData);
+    server.send(200, "text/plain", "");
 }
 
 /**********************************/

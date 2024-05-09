@@ -636,7 +636,7 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                         });
 
                         //===>
-                        fetchSignTextFromESP32CAM();
+                        // fetchSignTextFromESP32CAM();
                         handleShowSignText(signText);
                         clearSignTextBtn.addEventListener("click", () => {
                             console.log("Text cleared");
@@ -707,19 +707,19 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                             });
                         }
 
-                        function fetchSignTextFromESP32CAM() {
-                            fetch(baseHost + "/SIGN_TEXT_DATA")
-                                .then((response) => response.text())
-                                .then((data) => {
-                                    console.log(data);
-                                    signText = data;
-                                    handleShowSignText(signText);
-                                })
-                                .catch((error) => {
-                                    signText = "";
-                                    handleShowSignText(signText);
-                                });
-                        }
+                        // function fetchSignTextFromESP32CAM() {
+                        //     fetch(baseHost + "/SIGN_TEXT_DATA")
+                        //         .then((response) => response.text())
+                        //         .then((data) => {
+                        //             console.log(data);
+                        //             signText = data;
+                        //             handleShowSignText(signText);
+                        //         })
+                        //         .catch((error) => {
+                        //             signText = "";
+                        //             handleShowSignText(signText);
+                        //         });
+                        // }
                         function playSignText() {
                             console.log(`Playing ${signText}`);
                         }
