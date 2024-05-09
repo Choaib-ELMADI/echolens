@@ -540,9 +540,6 @@
 			document.onreadystatechange = function () {
 				if (document.readyState == "complete") {
 					//===>
-					let baseHost = document.location.origin;
-
-					//===>
 					const listeningCheckbox = document.getElementById("toggle-listening");
 					const listeningIndicator = document.getElementById(
 						"listening-indicator"
@@ -633,7 +630,6 @@
 					});
 
 					//===>
-					// fetchSignTextFromESP32CAM();
 					handleShowSignText(signText);
 					clearSignTextBtn.addEventListener("click", () => {
 						console.log("Text cleared");
@@ -704,19 +700,6 @@
 						});
 					}
 
-					// function fetchSignTextFromESP32CAM() {
-					// 	fetch(baseHost + "/SIGN_TEXT_DATA")
-					// 		.then((response) => response.text())
-					// 		.then((data) => {
-					// 			console.log(data);
-					// 			signText = data;
-					// 			handleShowSignText(signText);
-					// 		})
-					// 		.catch((error) => {
-					// 			signText = "";
-					// 			handleShowSignText(signText);
-					// 		});
-					// }
 					function playSignText() {
 						console.log(`Playing ${signText}`);
 					}
@@ -731,7 +714,7 @@
 					}
 					function handleShowSignText(signText) {
 						if (signText) {
-							signTextContainer.innerText = generatedText;
+							signTextContainer.innerText = signText;
 							signsContainer.style.display = "flex";
 						} else {
 							signsContainer.style.display = "none";
@@ -739,20 +722,20 @@
 					}
 
 					function handleToggleListening(listeningState) {
-						// let xhttp = new XMLHttpRequest();
-						// xhttp.open(
-						// 	"PUT",
-						// 	"TOGGLE_LISTENING?state=" + listeningState,
-						// 	false
-						// );
-						// xhttp.send();
-						console.log(listeningState);
+						let xhttp = new XMLHttpRequest();
+						xhttp.open(
+							"PUT",
+							"TOGGLE_LISTENING?state=" + listeningState,
+							false
+						);
+						xhttp.send();
+						// console.log(listeningState);
 					}
 					function handleToggleTalking(talkingState) {
-						// let xhttp = new XMLHttpRequest();
-						// xhttp.open("PUT", "TOGGLE_TALKING?state=" + talkingState, false);
-						// xhttp.send();
-						console.log(talkingState);
+						let xhttp = new XMLHttpRequest();
+						xhttp.open("PUT", "TOGGLE_TALKING?state=" + talkingState, false);
+						xhttp.send();
+						// console.log(talkingState);
 					}
 
 					function hide(el) {
@@ -780,8 +763,17 @@
 							{ hour12: false }
 						)}`;
 					}
+					function response() {
+						fetch("http://192.168.169.196/SEND_TEXT_SIGN")
+							.then((resu) => resu.text())
+							.then((data) => {
+								signText = data;
+								handleShowSignText(signText);
+							});
+					}
 					function process() {
 						updateDateTime();
+						response();
 						setTimeout(process, 40);
 					}
 				}

@@ -1,11 +1,14 @@
 import requests
+import urllib.parse
 import time
 
 text_data = "Hello, ESP32-CAM!"
-url = f"http://192.168.169.196/SIGN_TEXT_DATA?data={ text_data }"
+url = "http://192.168.169.196/GET_TEXT_SIGN"
 
 while True:
-    response = requests.post(url)
+    encoded_text_data = urllib.parse.quote(text_data)
+    full_url = f"{url}?signs={encoded_text_data}"
+    response = requests.post(full_url)
 
     if response.status_code == 200:
         print("Text data sent successfully to ESP32-CAM!")

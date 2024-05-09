@@ -1,7 +1,7 @@
 #include "Arduino.h"
 
 const char htmlWebPage[] PROGMEM = R"RAW(
-    <!DOCTYPE html>
+   <!DOCTYPE html>
     <html>
         <head>
             <meta charset="utf-8" />
@@ -543,9 +543,6 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                 document.onreadystatechange = function () {
                     if (document.readyState == "complete") {
                         //===>
-                        let baseHost = document.location.origin;
-
-                        //===>
                         const listeningCheckbox = document.getElementById("toggle-listening");
                         const listeningIndicator = document.getElementById(
                             "listening-indicator"
@@ -636,7 +633,6 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                         });
 
                         //===>
-                        // fetchSignTextFromESP32CAM();
                         handleShowSignText(signText);
                         clearSignTextBtn.addEventListener("click", () => {
                             console.log("Text cleared");
@@ -707,19 +703,6 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                             });
                         }
 
-                        // function fetchSignTextFromESP32CAM() {
-                        //     fetch(baseHost + "/SIGN_TEXT_DATA")
-                        //         .then((response) => response.text())
-                        //         .then((data) => {
-                        //             console.log(data);
-                        //             signText = data;
-                        //             handleShowSignText(signText);
-                        //         })
-                        //         .catch((error) => {
-                        //             signText = "";
-                        //             handleShowSignText(signText);
-                        //         });
-                        // }
                         function playSignText() {
                             console.log(`Playing ${signText}`);
                         }
@@ -734,7 +717,7 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                         }
                         function handleShowSignText(signText) {
                             if (signText) {
-                                signTextContainer.innerText = generatedText;
+                                signTextContainer.innerText = signText;
                                 signsContainer.style.display = "flex";
                             } else {
                                 signsContainer.style.display = "none";
@@ -742,20 +725,20 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                         }
 
                         function handleToggleListening(listeningState) {
-                            // let xhttp = new XMLHttpRequest();
-                            // xhttp.open(
-                            // 	"PUT",
-                            // 	"TOGGLE_LISTENING?state=" + listeningState,
-                            // 	false
-                            // );
-                            // xhttp.send();
-                            console.log(listeningState);
+                            let xhttp = new XMLHttpRequest();
+                            xhttp.open(
+                                "PUT",
+                                "TOGGLE_LISTENING?state=" + listeningState,
+                                false
+                            );
+                            xhttp.send();
+                            // console.log(listeningState);
                         }
                         function handleToggleTalking(talkingState) {
-                            // let xhttp = new XMLHttpRequest();
-                            // xhttp.open("PUT", "TOGGLE_TALKING?state=" + talkingState, false);
-                            // xhttp.send();
-                            console.log(talkingState);
+                            let xhttp = new XMLHttpRequest();
+                            xhttp.open("PUT", "TOGGLE_TALKING?state=" + talkingState, false);
+                            xhttp.send();
+                            // console.log(talkingState);
                         }
 
                         function hide(el) {
@@ -783,8 +766,17 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                                 { hour12: false }
                             )}`;
                         }
+                        function response() {
+                            fetch("http://192.168.169.196/SEND_TEXT_SIGN")
+                                .then((resu) => resu.text())
+                                .then((data) => {
+                                    signText = data;
+                                    handleShowSignText(signText);
+                                });
+                        }
                         function process() {
                             updateDateTime();
+                            response();
                             setTimeout(process, 40);
                         }
                     }

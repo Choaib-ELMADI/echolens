@@ -9,7 +9,7 @@ const char *password = "devchoaib";
 
 bool isListening = false;
 bool isTalking = false;
-String signTextData = "";
+String signTextData = "_EMPTY_";
 unsigned long lastDataMillis = 0;
 const uint8_t delayTime = 250;
 
@@ -43,9 +43,10 @@ void setup() {
     pinMode(yellowLED, OUTPUT);
 
     server.on("/", sendMainPage);
-    server.on("/TOGGLE_LISTENING", toggleListening);
-    server.on("/TOGGLE_TALKING", toggleTalking);
-    server.on("/SIGN_TEXT_DATA", sendSignTextData);
+    server.on("/GET_TEXT_SIGN", getTextSign);        // Get text from Python
+    server.on("/SEND_TEXT_SIGN", sendTextSign);      // Send text to the webpage
+    server.on("/TOGGLE_LISTENING", toggleListening); // Toggle listening
+    server.on("/TOGGLE_TALKING", toggleTalking);     // Toggle talking
 
     server.begin();
 }
@@ -157,10 +158,11 @@ void toggleTalking() {
     isTalking = talkingState.toInt();
     server.send(200, "text/plain", "");
 }
-void sendSignTextData() {
-    signTextData = server.arg("data");
+void getTextSign() {
+    signTextData = server.arg("signs");
     server.send(200, "text/plain", "");
 }
+void sendTextSign() { server.send(200, "text/plain", signTextData); }
 
 /**********************************/
 /*         FUNCTIONS HERE         */
