@@ -314,7 +314,8 @@
 							}
 						}
 
-						.speech.control {
+						.speech.control,
+						.signs.control {
 							grid-column: 1 / -1;
 
 							p {
@@ -515,6 +516,18 @@
 						</button>
 					</div>
 				</div>
+				<div class="signs control" id="signs-container">
+					<p id="sign-text-container" class="sign-text-container">
+						<span>You said: </span>
+						<span>"</span>
+						<span id="sign-text">Hello...</span>
+						<span>"</span>
+					</p>
+					<div class="buttons-container">
+						<button class="clear-sign-text" id="clear-sign-text">Clear</button>
+						<button class="play-sign-text" id="play-sign-text">Play</button>
+					</div>
+				</div>
 			</div>
 
 			<footer>
@@ -526,10 +539,6 @@
 		<script>
 			document.onreadystatechange = function () {
 				if (document.readyState == "complete") {
-					//===>
-					let baseHost = document.location.origin;
-					// var xmlHttp = createXMLHttpObject();
-
 					//===>
 					const listeningCheckbox = document.getElementById("toggle-listening");
 					const listeningIndicator = document.getElementById(
@@ -547,8 +556,15 @@
 					const clearGeneratedTextBtn = document.getElementById(
 						"clear-generated-text"
 					);
-					let generatedText = "hello";
+					let generatedText = "";
 					let recognition = null;
+
+					//===>
+					const signsContainer = document.getElementById("signs-container");
+					const signTextContainer = document.getElementById("sign-text");
+					const clearSignTextBtn = document.getElementById("clear-sign-text");
+					const playSignTextBtn = document.getElementById("play-sign-text");
+					let signText = "";
 
 					//===>
 					const toggleDarkLightMode =
@@ -614,6 +630,17 @@
 					});
 
 					//===>
+					handleShowSignText(signText);
+					clearSignTextBtn.addEventListener("click", () => {
+						console.log("Text cleared");
+						signText = "";
+						handleShowSignText(signText);
+					});
+					playSignTextBtn.addEventListener("click", () => {
+						playSignText();
+					});
+
+					//===>
 					toggleDarkLightMode.addEventListener("change", () => {
 						document.body.classList.toggle("light");
 
@@ -628,15 +655,6 @@
 					process();
 
 					//* ========================================================================================= *//
-
-					// function createXMLHttpObject() {
-					// 	if (window.XMLHttpRequest) {
-					// 		xmlHttp = new XMLHttpRequest();
-					// 	} else {
-					// 		xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-					// 	}
-					// 	return xmlHttp;
-					// }
 
 					function setUpSpeech(lang) {
 						recognition = new webkitSpeechRecognition();
@@ -682,6 +700,10 @@
 						});
 					}
 
+					function playSignText() {
+						console.log(`Playing ${signText}`);
+					}
+
 					function handleShowText(generatedText) {
 						if (generatedText) {
 							generatedTextContainer.innerText = generatedText;
@@ -690,22 +712,30 @@
 							speechContainer.style.display = "none";
 						}
 					}
+					function handleShowSignText(signText) {
+						if (signText && signText !== "_EMPTY_") {
+							signTextContainer.innerText = signText;
+							signsContainer.style.display = "flex";
+						} else {
+							signsContainer.style.display = "none";
+						}
+					}
 
 					function handleToggleListening(listeningState) {
-						// let xhttp = new XMLHttpRequest();
-						// xhttp.open(
-						// 	"PUT",
-						// 	"TOGGLE_LISTENING?state=" + listeningState,
-						// 	false
-						// );
-						// xhttp.send();
-						console.log(listeningState);
+						let xhttp = new XMLHttpRequest();
+						xhttp.open(
+							"PUT",
+							"TOGGLE_LISTENING?state=" + listeningState,
+							false
+						);
+						xhttp.send();
+						// console.log(listeningState);
 					}
 					function handleToggleTalking(talkingState) {
-						// let xhttp = new XMLHttpRequest();
-						// xhttp.open("PUT", "TOGGLE_TALKING?state=" + talkingState, false);
-						// xhttp.send();
-						console.log(talkingState);
+						let xhttp = new XMLHttpRequest();
+						xhttp.open("PUT", "TOGGLE_TALKING?state=" + talkingState, false);
+						xhttp.send();
+						// console.log(talkingState);
 					}
 
 					function hide(el) {
@@ -733,39 +763,19 @@
 							{ hour12: false }
 						)}`;
 					}
-					// function response() {
-					// 	let xmlResponse;
-					// 	let xmlDoc;
-					// 	let message;
-
-					// 	// GET XML RESPONSE FROM ESP32
-					// 	xmlResponse = xmlHttp.responseXML;
-					// 	// console.log(xmlResponse);
-
-					// 	/* xmlDoc = xmlResponse.getElementsByTagName("StreamState");
-					//         message = xmlDoc[0].firstChild.nodeValue;
-					//         if (message == 0) imageCheckbox.checked = false;
-					//         else imageCheckbox.checked = true;
-
-					//         xmlDoc = xmlResponse.getElementsByTagName("ListeningState");
-					//         message = xmlDoc[0].firstChild.nodeValue;
-					//         if (message == 0) listeningCheckbox.checked = false;
-					//         else listeningCheckbox.checked = true;
-
-					//         xmlDoc = xmlResponse.getElementsByTagName("TalkingState");
-					//         message = xmlDoc[0].firstChild.nodeValue;
-					//         if (message == 0) talkingCheckbox.checked = false;
-					//         else talkingCheckbox.checked = true; */
-					// }
+					function response() {
+						if (talkingCheckbox.checked) {
+							fetch("http://192.168.169.196/SEND_TEXT_SIGN")
+								.then((resu) => resu.text())
+								.then((data) => {
+									signText = data;
+									handleShowSignText(signText);
+								});
+						}
+					}
 					function process() {
 						updateDateTime();
-
-						// if (xmlHttp.readyState == 0 || xmlHttp.readyState == 4) {
-						// 	xmlHttp.open("PUT", "xml", true);
-						// 	xmlHttp.onreadystatechange = response;
-						// 	xmlHttp.send(null);
-						// }
-
+						response();
 						setTimeout(process, 40);
 					}
 				}

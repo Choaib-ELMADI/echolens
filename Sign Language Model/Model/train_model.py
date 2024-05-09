@@ -21,10 +21,10 @@ def train_new_model(data_path, model_output):
 
 
 data_name = "dead_data"
-data_path = f"C:\\Users\\Choaib ELMADI\\Downloads\\D.I.F.Y\\Electronics\\Robotics\\6- EchoLens\\Sign Language Model (DLM)\\{ data_name }.csv"
+data_path = f"C:\\Users\\Choaib ELMADI\\Downloads\\D.I.F.Y\\Electronics\\Robotics\\6- EchoLens\\Sign Language Model\\Model\\{ data_name }.csv"
 
 model_name = "dead_model"
-model_output = f"C:\\Users\\Choaib ELMADI\\Downloads\\D.I.F.Y\\Electronics\\Robotics\\6- EchoLens\\Sign Language Model (DLM)\\{ model_name }.joblib"
+model_output = f"C:\\Users\\Choaib ELMADI\\Downloads\\D.I.F.Y\\Electronics\\Robotics\\6- EchoLens\\Sign Language Model\\Model\\{ model_name }.joblib"
 
 
 train_new_model(data_path, model_output)

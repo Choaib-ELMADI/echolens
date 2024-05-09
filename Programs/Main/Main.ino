@@ -13,10 +13,10 @@ String signTextData = "_EMPTY_";
 unsigned long lastDataMillis = 0;
 const uint8_t delayTime = 250;
 
-const uint8_t greenLED = 2;
-const uint8_t yellowLED = 14;
-const long greenLEDInterval = 1000;
-const long yellowLEDInterval = 500;
+const uint8_t listeningLED = 14;
+const uint8_t talkingLED = 2;
+const long listeningLEDInterval = 250;
+const long talkingLEDInterval = 250;
 unsigned long previousMillisArray[2] = {0, 0};
 bool ledStateArray[2] = {LOW, LOW};
 
@@ -39,14 +39,15 @@ void setup() {
     connectToWiFi();
     Serial.println("Done connect WiFi.");
 
-    pinMode(greenLED, OUTPUT);
-    pinMode(yellowLED, OUTPUT);
+    pinMode(listeningLED, OUTPUT);
+    pinMode(talkingLED, OUTPUT);
 
     server.on("/", sendMainPage);
     server.on("/GET_TEXT_SIGN", getTextSign);        // Get text from Python
     server.on("/SEND_TEXT_SIGN", sendTextSign);      // Send text to the webpage
     server.on("/TOGGLE_LISTENING", toggleListening); // Toggle listening
     server.on("/TOGGLE_TALKING", toggleTalking);     // Toggle talking
+    server.on("/IS_TALKING", sendTalkingState); // Send talking state to Python
 
     server.begin();
 }
@@ -54,9 +55,17 @@ void loop() {
     if (millis() - lastDataMillis >= delayTime) {
         lastDataMillis = millis();
 
-        blinkLED(greenLED, greenLEDInterval, 0);
-        blinkLED(yellowLED, yellowLEDInterval, 1);
-        printData();
+        if (isListening) {
+            blinkLED(listeningLED, listeningLEDInterval, 0);
+            digitalWrite(talkingLED, LOW);
+        }
+
+        if (isTalking) {
+            blinkLED(talkingLED, talkingLEDInterval, 1);
+            digitalWrite(listeningLED, LOW);
+        }
+
+        // printData();
     }
 
     server.handleClient();
@@ -163,6 +172,7 @@ void getTextSign() {
     server.send(200, "text/plain", "");
 }
 void sendTextSign() { server.send(200, "text/plain", signTextData); }
+void sendTalkingState() { server.send(200, "text/plain", String(isTalking)); }
 
 /**********************************/
 /*         FUNCTIONS HERE         */

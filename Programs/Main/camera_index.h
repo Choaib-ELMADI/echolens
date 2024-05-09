@@ -716,7 +716,7 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                             }
                         }
                         function handleShowSignText(signText) {
-                            if (signText) {
+                            if (signText && signText !== "_EMPTY_") {
                                 signTextContainer.innerText = signText;
                                 signsContainer.style.display = "flex";
                             } else {
@@ -767,12 +767,14 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                             )}`;
                         }
                         function response() {
-                            fetch("http://192.168.169.196/SEND_TEXT_SIGN")
-                                .then((resu) => resu.text())
-                                .then((data) => {
-                                    signText = data;
-                                    handleShowSignText(signText);
-                                });
+                            if (talkingCheckbox.checked) {
+                                fetch("http://192.168.169.196/SEND_TEXT_SIGN")
+                                    .then((resu) => resu.text())
+                                    .then((data) => {
+                                        signText = data;
+                                        handleShowSignText(signText);
+                                    });
+                            }
                         }
                         function process() {
                             updateDateTime();
