@@ -6,6 +6,7 @@ const char htmlWebPage[] PROGMEM = R"RAW(
         <head>
             <meta charset="utf-8" />
             <meta name="viewport" content="width=device-width,initial-scale=1" />
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
             <title>EchoLens | Smart Device</title>
             <style>
                 * {
@@ -593,7 +594,7 @@ const char htmlWebPage[] PROGMEM = R"RAW(
             <script>
                 document.onreadystatechange = function () {
                     if (document.readyState == "complete") {
-                        //===>
+                        //* ========================================================================================= *//
                         const languageForm = document.getElementById("language-form");
                         let selectedLanguage = "EN";
                         const speechLanguages = { EN: "en-US", FR: "fr-FR", AR: "ar-SA" };
@@ -631,8 +632,6 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                         const currentMode = document.getElementById("dark-light-curr-mode");
 
                         //* ========================================================================================= *//
-
-                        //===>
                         handleSelectedLanguage();
                         languageForm.addEventListener("change", handleSelectedLanguage);
 
@@ -778,7 +777,12 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                         }
 
                         function playSignText() {
-                            console.log(`Playing ${signText}`);
+                            if (signText && signText !== "_BLANK_") {
+                                const synth = window.speechSynthesis;
+                                const utterance = new SpeechSynthesisUtterance(signText);
+                                utterance.lang = speechLanguages[selectedLanguage];
+                                synth.speak(utterance);
+                            }
                         }
 
                         function handleShowText(generatedText) {

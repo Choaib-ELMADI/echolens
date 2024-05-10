@@ -1,3 +1,4 @@
+//======//
 Person 1: Hello!
 Person 2: Hello! How are you?
 
@@ -12,3 +13,20 @@ Person 2: Yeah, I hear you. Well, it's nice chatting with you.
 
 Person 1: Yeah, you too! Take care!
 Person 2: You too, bye!
+
+
+//======//
+Person 1: Hello!
+Person 2: Hello!
+
+Person 1: How are you?
+Person 2: Good.
+
+Person 1: What are you doing?
+Person 2: Nothing.
+
+Person 1: Good, Take care.
+Person 2: Thank you, Nice to meet you.
+
+Person 1: Bye.
+Person 2: Bye.
