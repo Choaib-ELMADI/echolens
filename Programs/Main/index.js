@@ -1,99 +1,212 @@
 document.onreadystatechange = function () {
 	if (document.readyState == "complete") {
-		// let baseHost = document.location.origin;
-		// let streamUrl = baseHost + ":81/stream";
-		// var xmlHttp = createXMLHttpObject();
+		//===>
+		const languageForm = document.getElementById("language-form");
+		let selectedLanguage = "EN";
+		const speechLanguages = { EN: "en-US", FR: "fr-FR", AR: "ar-SA" };
 
-		//! IMAGE GROUP (1)
-		// const imageCheckbox = document.getElementById("show-hide-image");
-		// const viewStream = document.getElementById("stream-image");
-		// viewStream.src = streamUrl;
-		// const viewStreamContainer = document.getElementById("stream-container");
-		// const ledIntensitySlider = document.getElementById("led-intensity-slider");
+		//===>
+		const listeningCheckbox = document.getElementById("toggle-listening");
+		const listeningIndicator = document.getElementById("listening-indicator");
 
-		//! TALKING GROUP (1)
-		// const talkingCheckbox = document.getElementById("toggle-talking");
-		// const talkingIndicator = document.getElementById("talking-indicator");
+		//===>
+		const talkingCheckbox = document.getElementById("toggle-talking");
+		const talkingIndicator = document.getElementById("talking-indicator");
 
-		//! DARK/LIGHT MODE (1)
-		// const toggleDarkLightMode = document.getElementById("dark-light-mode");
-		// const currentMode = document.getElementById("dark-light-curr-mode");
+		//===>
+		const speechContainer = document.getElementById("speech-container");
+		const generatedTextContainer = document.getElementById("generated-text");
+		const clearGeneratedTextBtn = document.getElementById(
+			"clear-generated-text"
+		);
+		let generatedText = "";
+		let recognition = null;
 
-		// * =========================================================================================
+		//===>
+		const signsContainer = document.getElementById("signs-container");
+		const signTextContainer = document.getElementById("sign-text");
+		const clearSignTextBtn = document.getElementById("clear-sign-text");
+		const playSignTextBtn = document.getElementById("play-sign-text");
+		let signText = "";
 
-		//! IMAGE GROUP (2)
-		// handleCheckboxChange(imageCheckbox, viewStreamContainer);
-		// imageCheckbox.addEventListener("change", () => {
-		// 	listeningCheckbox.checked = false;
-		// 	talkingCheckbox.checked = false;
+		//===>
+		const toggleDarkLightMode = document.getElementById("dark-light-mode");
+		const currentMode = document.getElementById("dark-light-curr-mode");
 
-		// 	handleCheckboxChange(listeningCheckbox, listeningIndicator);
-		// 	handleCheckboxChange(talkingCheckbox, talkingIndicator);
-		// 	handleCheckboxChange(imageCheckbox, viewStreamContainer);
+		//* ========================================================================================= *//
 
-		// 	handleToggleViewStream();
-		// });
-		// handleSliderIntensityUpdate();
-		// ledIntensitySlider.oninput = handleSliderIntensityUpdate;
+		//===>
+		handleSelectedLanguage();
+		languageForm.addEventListener("change", handleSelectedLanguage);
 
-		//! TALKING GROUP (2)
-		// handleCheckboxChange(talkingCheckbox, talkingIndicator);
-		// talkingCheckbox.addEventListener("change", () => {
-		// 	imageCheckbox.checked = false;
-		// 	listeningCheckbox.checked = false;
+		//===>
+		setUpSpeech(speechLanguages[selectedLanguage]);
+		handleShowText(generatedText);
+		handleToggleListening(0);
+		handleCheckboxChange(listeningCheckbox, listeningIndicator);
+		listeningCheckbox.addEventListener("change", () => {
+			handleCheckboxChange(listeningCheckbox, listeningIndicator);
 
-		// 	handleCheckboxChange(imageCheckbox, viewStreamContainer);
-		// 	handleCheckboxChange(listeningCheckbox, listeningIndicator);
-		// 	handleCheckboxChange(talkingCheckbox, talkingIndicator);
+			talkingCheckbox.checked = false;
+			handleCheckboxChange(talkingCheckbox, talkingIndicator);
 
-		// 	handleToggleTalking();
-		// });
+			if (listeningCheckbox.checked) {
+				console.log("Stoped Talking.");
+				handleToggleTalking(0);
 
-		// process();
+				generatedText = "";
+				handleShowText(generatedText);
+				console.log("Listening...");
+				handleToggleListening(1);
+				recognition.start();
+			} else {
+				console.log("Stoped Listening.");
+				handleToggleListening(0);
+				recognition.stop();
+			}
+		});
 
-		// * FUNCTIONS HERE
+		//===>
+		handleToggleTalking(0);
+		handleCheckboxChange(talkingCheckbox, talkingIndicator);
+		talkingCheckbox.addEventListener("change", () => {
+			handleCheckboxChange(talkingCheckbox, talkingIndicator);
 
-		// function createXMLHttpObject() {
-		// 	if (window.XMLHttpRequest) {
-		// 		xmlHttp = new XMLHttpRequest();
-		// 	} else {
-		// 		xmlHttp = new ActiveXObject("Microsoft.XMLHTTP");
-		// 	}
-		// 	return xmlHttp;
-		// }
+			listeningCheckbox.checked = false;
+			handleCheckboxChange(listeningCheckbox, listeningIndicator);
 
-		// function handleToggleViewStream() {
-		// 	let xhttp = new XMLHttpRequest();
-		// 	xhttp.open("PUT", "TOGGLE_VIEW_STREAM", false);
-		// 	xhttp.send();
-		// }
-		// function handleToggleListening() {
-		// 	let xhttp = new XMLHttpRequest();
-		// 	xhttp.open("PUT", "TOGGLE_LISTENING", false);
-		// 	xhttp.send();
-		// }
-		// function handleToggleTalking() {
-		// 	let xhttp = new XMLHttpRequest();
-		// 	xhttp.open("PUT", "TOGGLE_TALKING", false);
-		// 	xhttp.send();
-		// }
-		// function handleSliderIntensityUpdate() {
-		// 	let xhttp = new XMLHttpRequest();
-		// 	xhttp.open("PUT", "UPDATE_INTENSITY?intensity=" + this.value, false);
-		// 	xhttp.send();
-		// }
+			if (talkingCheckbox.checked) {
+				console.log("Stoped Listening.");
+				handleToggleListening(0);
+				recognition.stop();
 
-		// function updateDateTime() {
-		// 	const dateContainer = document.getElementById("date-container");
-		// 	const timeContainer = document.getElementById("time-container");
-		// 	const dt = new Date();
+				console.log("Talking...");
+				handleToggleTalking(1);
+			} else {
+				console.log("Stoped Talking.");
+				handleToggleTalking(0);
+			}
+		});
 
-		// 	dateContainer.innerHTML = `<small>Date:</small> ${dt.toLocaleDateString()}`;
-		// 	timeContainer.innerHTML = `<small>Time:</small> ${dt.toLocaleTimeString(
-		// 		"en-US",
-		// 		{ hour12: false }
-		// 	)}`;
-		// }
+		//===>
+		clearGeneratedTextBtn.addEventListener("click", () => {
+			console.log("Text cleared");
+			generatedText = "";
+			handleShowText(generatedText);
+		});
+
+		//===>
+		handleShowSignText(signText);
+		clearSignTextBtn.addEventListener("click", () => {
+			console.log("Text cleared");
+			signText = "";
+			handleShowSignText(signText);
+		});
+		playSignTextBtn.addEventListener("click", () => {
+			playSignText();
+		});
+
+		//===>
+		toggleDarkLightMode.addEventListener("change", () => {
+			document.body.classList.toggle("light");
+
+			if (document.body.classList.contains("light")) {
+				currentMode.innerText = "Light";
+			} else {
+				currentMode.innerText = "Dark";
+			}
+		});
+
+		//===>
+		process();
+
+		//* ========================================================================================= *//
+		function handleSelectedLanguage() {
+			let xhttp = new XMLHttpRequest();
+			const selectedLanguageInput = document.querySelector(
+				'input[name="language"]:checked'
+			);
+
+			selectedLanguage = selectedLanguageInput.value;
+			xhttp.open("PUT", "GET_SELECTED_LANG?lang=" + selectedLanguage, false);
+			xhttp.send();
+		}
+
+		function setUpSpeech(lang) {
+			recognition = new webkitSpeechRecognition();
+			recognition.continuous = true;
+			recognition.interimResults = true;
+			recognition.lang = lang;
+
+			return new Promise((resolve, reject) => {
+				recognition.onresult = function (event) {
+					let interimTranscript = "";
+					let finalTranscript = "";
+
+					for (let i = event.resultIndex; i < event.results.length; ++i) {
+						const transcript = event.results[i][0].transcript;
+
+						if (event.results[i].isFinal) {
+							finalTranscript += transcript;
+						} else {
+							interimTranscript += transcript;
+						}
+					}
+
+					generatedText = finalTranscript;
+					handleShowText(generatedText);
+				};
+
+				recognition.onerror = function (event) {
+					console.error("Speech recognition error: ", event.error);
+					listeningCheckbox.checked = false;
+					handleCheckboxChange(listeningCheckbox, listeningIndicator);
+					handleToggleListening(0);
+					reject(event.error);
+				};
+
+				recognition.onend = function () {
+					console.log("Speech recognition ended.");
+					listeningCheckbox.checked = false;
+					handleToggleListening(0);
+					handleCheckboxChange(listeningCheckbox, listeningIndicator);
+				};
+
+				resolve();
+			});
+		}
+
+		function playSignText() {
+			console.log(`Playing ${signText}`);
+		}
+
+		function handleShowText(generatedText) {
+			if (generatedText) {
+				generatedTextContainer.innerText = generatedText;
+				speechContainer.style.display = "flex";
+			} else {
+				speechContainer.style.display = "none";
+			}
+		}
+		function handleShowSignText(signText) {
+			if (signText && signText !== "_BLANK_") {
+				signTextContainer.innerText = signText;
+				signsContainer.style.display = "flex";
+			} else {
+				signsContainer.style.display = "none";
+			}
+		}
+
+		function handleToggleListening(listeningState) {
+			let xhttp = new XMLHttpRequest();
+			xhttp.open("PUT", "TOGGLE_LISTENING?state=" + listeningState, false);
+			xhttp.send();
+		}
+		function handleToggleTalking(talkingState) {
+			let xhttp = new XMLHttpRequest();
+			xhttp.open("PUT", "TOGGLE_TALKING?state=" + talkingState, false);
+			xhttp.send();
+		}
 
 		function hide(el) {
 			el.style.display = "none";
@@ -101,7 +214,6 @@ document.onreadystatechange = function () {
 		function show(el) {
 			el.style.display = "flex";
 		}
-
 		function handleCheckboxChange(checkboxEl, el) {
 			if (checkboxEl.checked) {
 				show(el);
@@ -110,183 +222,31 @@ document.onreadystatechange = function () {
 			}
 		}
 
-		// function response() {
-		// 	let xmlResponse;
-		// 	let xmlDoc;
-		// 	let message;
+		function updateDateTime() {
+			const dateContainer = document.getElementById("date-container");
+			const timeContainer = document.getElementById("time-container");
+			const dt = new Date();
 
-		// 	xmlResponse = xmlHttp.responseXML;
-		// 	console.log(xmlResponse);
-
-		// 	/* xmlDoc = xmlResponse.getElementsByTagName("StreamState");
-		// 				message = xmlDoc[0].firstChild.nodeValue;
-		// 				if (message == 0) imageCheckbox.checked = false;
-		// 				else imageCheckbox.checked = true;
-
-		// 				xmlDoc = xmlResponse.getElementsByTagName("ListeningState");
-		// 				message = xmlDoc[0].firstChild.nodeValue;
-		// 				if (message == 0) listeningCheckbox.checked = false;
-		// 				else listeningCheckbox.checked = true;
-
-		// 				xmlDoc = xmlResponse.getElementsByTagName("TalkingState");
-		// 				message = xmlDoc[0].firstChild.nodeValue;
-		// 				if (message == 0) talkingCheckbox.checked = false;
-		// 				else talkingCheckbox.checked = true;
-		// }
-
-		// function process() {
-		// 	updateDateTime();
-
-		// 	if (xmlHttp.readyState == 0 || xmlHttp.readyState == 4) {
-		// 		xmlHttp.open("PUT", "xml", true);
-		// 		xmlHttp.onreadystatechange = response;
-		// 		xmlHttp.send(null);
-		// 	}
-
-		// 	setTimeout(process, 40);
-		// }
+			dateContainer.innerHTML = `<small>Date:</small> ${dt.toLocaleDateString()}`;
+			timeContainer.innerHTML = `<small>Time:</small> ${dt.toLocaleTimeString(
+				"en-US",
+				{ hour12: false }
+			)}`;
+		}
+		function response() {
+			if (talkingCheckbox.checked) {
+				fetch("http://192.168.169.196/SEND_TEXT_SIGN")
+					.then((resu) => resu.text())
+					.then((data) => {
+						signText = data;
+						handleShowSignText(signText);
+					});
+			}
+		}
+		function process() {
+			updateDateTime();
+			response();
+			setTimeout(process, 40);
+		}
 	}
 };
-
-// document.onreadystatechange = function () {
-// 	if (document.readyState == "complete") {
-// 		//* ==== Request Group ==== *//
-// 		// let baseHost = document.location.origin;
-// 		// let streamUrl = baseHost + ":81/stream";
-// 		// var xmlHttp = createXMLHttpObject();
-
-// 		//* ==== Image Group ==== *//
-// 		// const imageCheckbox = document.getElementById("show-hide-image");
-// 		// const viewStream = document.getElementById("stream-image");
-// 		// viewStream.src = streamUrl;
-// 		// const viewStreamContainer = document.getElementById("stream-container");
-// 		// const ledIntensitySlider = document.getElementById("led-intensity-slider");
-
-// 		//* ==== Dark/Light Mode Group ==== *//
-// 		const toggleDarkLightMode = document.getElementById("dark-light-mode");
-// 		const currentMode = document.getElementById("dark-light-curr-mode");
-
-// 		//* ==== Listen Group ==== *//
-// 		const listeningCheckbox = document.getElementById("toggle-listening");
-// 		const listeningIndicator = document.getElementById("listening-indicator");
-
-// 		//* ==== Talk Group ==== *//
-// 		// const talkingCheckbox = document.getElementById("toggle-talking");
-// 		// const talkingIndicator = document.getElementById("talking-indicator");
-
-// 		//* ==== Speech Group ==== *//
-// 		const speechContainer = document.getElementById("speech-container");
-// 		const generatedTextContainer = document.getElementById(
-// 			"generated-text-container"
-// 		);
-// 		const clearGeneratedTextBtn = document.getElementById(
-// 			"clear-generated-text"
-// 		);
-// 		let generatedText = "";
-// 		let recognition = null;
-
-// 		//* ========================================================================================= *//
-
-// 		//* ==== Dark/Light Mode Group ==== *//
-// 		toggleDarkLightMode.addEventListener("change", () => {
-// 			document.body.classList.toggle("light");
-
-// 			if (document.body.classList.contains("light")) {
-// 				currentMode.innerText = "Light";
-// 			} else {
-// 				currentMode.innerText = "Dark";
-// 			}
-// 		});
-
-// 		//* ==== Speech Group ==== *//
-// 		setUpSpeech("en-US");
-// 		handleShowText(generatedText);
-// 		handleCheckboxChange(listeningCheckbox, listeningIndicator);
-// 		listeningCheckbox.addEventListener("change", () => {
-// 			handleCheckboxChange(listeningCheckbox, listeningIndicator);
-
-// 			if (listeningCheckbox.checked) {
-// 				generatedText = "";
-// 				handleShowText(generatedText);
-// 				console.log("Checked");
-// 				recognition.start();
-// 			} else {
-// 				console.log("Unchecked");
-// 				recognition.stop();
-// 			}
-// 		});
-// 		clearGeneratedTextBtn.addEventListener("click", () => {
-// 			console.log("Text cleared");
-// 			generatedText = "";
-// 			handleShowText(generatedText);
-// 		});
-
-// 		//* ========================================================================================= *//
-
-// 		function setUpSpeech(lang) {
-// 			recognition = new webkitSpeechRecognition();
-// 			recognition.continuous = true;
-// 			recognition.interimResults = true;
-// 			recognition.lang = lang;
-
-// 			return new Promise((resolve, reject) => {
-// 				recognition.onresult = function (event) {
-// 					let interimTranscript = "";
-// 					let finalTranscript = "";
-
-// 					for (let i = event.resultIndex; i < event.results.length; ++i) {
-// 						const transcript = event.results[i][0].transcript;
-
-// 						if (event.results[i].isFinal) {
-// 							finalTranscript += transcript;
-// 						} else {
-// 							interimTranscript += transcript;
-// 						}
-// 					}
-
-// 					generatedText = finalTranscript;
-// 					handleShowText(generatedText);
-// 				};
-
-// 				recognition.onerror = function (event) {
-// 					console.error("Speech recognition error: ", event.error);
-// 					listeningCheckbox.checked = false;
-// 					handleCheckboxChange(listeningCheckbox, listeningIndicator);
-// 					reject(event.error);
-// 				};
-
-// 				recognition.onend = function () {
-// 					console.log("Speech recognition ended");
-// 					listeningCheckbox.checked = false;
-// 					handleCheckboxChange(listeningCheckbox, listeningIndicator);
-// 				};
-
-// 				resolve();
-// 			});
-// 		}
-
-// 		function handleShowText(generatedText) {
-// 			if (generatedText) {
-// 				generatedTextContainer.innerText = generatedText;
-// 				speechContainer.style.display = "flex";
-// 			} else {
-// 				speechContainer.style.display = "none";
-// 			}
-// 		}
-
-// 		function hide(el) {
-// 			el.style.display = "none";
-// 		}
-// 		function show(el) {
-// 			el.style.display = "flex";
-// 		}
-
-// 		function handleCheckboxChange(checkboxEl, el) {
-// 			if (checkboxEl.checked) {
-// 				show(el);
-// 			} else {
-// 				hide(el);
-// 			}
-// 		}
-// 	}
-// };

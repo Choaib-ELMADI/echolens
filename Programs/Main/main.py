@@ -31,7 +31,7 @@ hands = mp_hands.Hands(max_num_hands=1)
 url = "http://192.168.169.196"
 get_talking_state_url = f"{ url }/IS_TALKING"
 get_lang_url = f"{ url }/SEND_SELECTED_LANG"
-empty_text = "_EMPTY_"
+empty_text = "_BLANK_"
 selected_lang = "EN"
 list_message = []
 text_message = ""
@@ -85,9 +85,11 @@ while True:
             ).flatten()
 
         if counter % 30 == 0:
-            gesture = sign_language_model.predict_hand_gesture(hand_keypoints)
+            gesture = sign_language_model.predict_hand_gesture(
+                hand_keypoints, selected_lang
+            )
 
-        if gesture != "_BLANK" and gesture not in list_message:
+        if gesture != "_BLANK_" and gesture not in list_message:
             if gesture == "Point":
                 list_message.append(".")
                 is_end_of_phrase = True
@@ -95,9 +97,9 @@ while True:
                 list_message.append(gesture)
 
     # ====>
-    text_message = " ".join(list_message)
-    image_text_message = " ".join(list_message[-4:])
-    if image_text_message.strip() != "":
+    text_message = " ".join(list_message).strip()
+    image_text_message = " ".join(list_message[-4:]).strip()
+    if image_text_message != "":
         cvzone.putTextRect(
             frame,
             f"{image_text_message}",

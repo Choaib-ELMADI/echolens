@@ -11,7 +11,7 @@ const char *password = "devchoaib";
 
 bool isListening = false;
 bool isTalking = false;
-String signTextData = "_EMPTY_";
+String signTextData = "_BLANK_";
 String selectedLang = "EN";
 unsigned long lastDataMillis = 0;
 const uint8_t delayTime = 250;

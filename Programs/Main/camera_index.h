@@ -790,7 +790,7 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                             }
                         }
                         function handleShowSignText(signText) {
-                            if (signText && signText !== "_EMPTY_") {
+                            if (signText && signText !== "_BLANK_") {
                                 signTextContainer.innerText = signText;
                                 signsContainer.style.display = "flex";
                             } else {
