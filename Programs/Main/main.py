@@ -29,8 +29,10 @@ hands = mp_hands.Hands(max_num_hands=1)
 
 # ====>
 url = "http://192.168.169.196"
-get_url = f"{ url }/IS_TALKING"
+get_talking_state_url = f"{ url }/IS_TALKING"
+get_lang_url = f"{ url }/SEND_SELECTED_LANG"
 empty_text = "_EMPTY_"
+selected_lang = "EN"
 list_message = []
 text_message = ""
 is_talking = False
@@ -44,7 +46,7 @@ border_color = (61, 147, 8)  # GREEN
 
 # ====>
 stream_url = f"{ url }:81/stream"
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(stream_url)
 
 counter = 0
 while True:
@@ -54,12 +56,16 @@ while True:
     frame_copy = cv2.cvtColor(frame_copy, cv2.COLOR_BGR2RGB)
 
     # ====>
-    get_response = requests.get(get_url)
-    if get_response.status_code == 200:
-        is_talking = get_response.json()
+    get_talking_response = requests.get(get_talking_state_url)
+    if get_talking_response.status_code == 200:
+        is_talking = get_talking_response.json()
 
     # ====>
     if is_talking:
+        get_lang_response = requests.get(get_lang_url)
+        if get_lang_response.status_code == 200:
+            selected_lang = get_lang_response.text
+
         hand_keypoints = np.zeros(21 * 2)
         results = hands.process(frame_copy)
 
@@ -81,35 +87,30 @@ while True:
         if counter % 30 == 0:
             gesture = sign_language_model.predict_hand_gesture(hand_keypoints)
 
-            if gesture != "_BLANK" and gesture not in list_message:
-                if gesture == "Point":
-                    list_message.append(".")
-                    is_end_of_phrase = True
-                else:
-                    list_message.append(gesture)
-
-            if len(list_message) % 4 == 0:
-                list_message.append("\n")
-                text_message = " ".join(list_message)
+        if gesture != "_BLANK" and gesture not in list_message:
+            if gesture == "Point":
+                list_message.append(".")
+                is_end_of_phrase = True
+            else:
+                list_message.append(gesture)
 
     # ====>
-    if text_message.strip() != "":
-        y0, dy = 50, 50
-        for i, line in enumerate(text_message.split("\n")):
-            y = y0 + i * dy
-            cvzone.putTextRect(
-                frame,
-                f"{line}",
-                pos=(30, y),
-                scale=1,
-                thickness=1,
-                colorT=text_color,
-                colorR=text_background,
-                font=cv2.FONT_HERSHEY_COMPLEX_SMALL,
-                offset=8,
-                border=1,
-                colorB=text_color,
-            )
+    text_message = " ".join(list_message)
+    image_text_message = " ".join(list_message[-4:])
+    if image_text_message.strip() != "":
+        cvzone.putTextRect(
+            frame,
+            f"{image_text_message}",
+            pos=(30, 50),
+            scale=1,
+            thickness=1,
+            colorT=text_color,
+            colorR=text_background,
+            font=cv2.FONT_HERSHEY_COMPLEX_SMALL,
+            offset=8,
+            border=1,
+            colorB=text_color,
+        )
     cv2.imshow("Frame", frame)
 
     # ====>
@@ -119,6 +120,7 @@ while True:
         if post_response.status_code == 200:
             list_message = []
             text_message = ""
+            image_text_message = ""
             is_end_of_phrase = False
 
     # ====>

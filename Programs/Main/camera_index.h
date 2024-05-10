@@ -115,7 +115,7 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                                 align-items: center;
                                 gap: 0.5rem;
 
-                                @media screen and (width <= 460px) {
+                                @media screen and (width <= 600px) {
                                     flex-direction: column;
                                     align-items: start;
                                 }
@@ -173,14 +173,37 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                                     align-items: center;
                                     gap: 0.5rem;
 
-                                    @media screen and (width <= 460px) {
+                                    @media screen and (width <= 600px) {
                                         width: 100%;
                                         display: grid;
                                         grid-template-columns: repeat(2, 1fr);
                                     }
 
-                                    @media screen and (width <= 260px) {
+                                    @media screen and (width <= 300px) {
                                         grid-template-columns: repeat(1, 1fr);
+                                        margin-block: 0.75rem;
+                                    }
+
+                                    #language-form {
+                                        display: flex;
+                                        align-items: center;
+                                        gap: 0.75rem;
+                                        div {
+                                            display: flex;
+                                            align-items: center;
+
+                                            input,
+                                            label {
+                                                cursor: pointer;
+                                                user-select: none;
+                                            }
+                                        }
+                                    }
+
+                                    #empty {
+                                        @media screen and (width <= 300px) {
+                                            display: none;
+                                        }
                                     }
 
                                     span {
@@ -189,8 +212,15 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                                         border-radius: 8px;
                                         user-select: none;
 
-                                        @media screen and (width <= 460px) {
+                                        @media screen and (width <= 600px) {
                                             text-align: center;
+                                        }
+
+                                        @media screen and (width <= 300px) {
+                                            display: flex;
+                                            align-items: center;
+                                            justify-content: center;
+                                            gap: 0.5rem;
                                         }
 
                                         small {
@@ -451,6 +481,27 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                             <p id="dark-light-curr-mode">Dark</p>
                         </div>
                         <div class="dt-container">
+                            <form id="language-form">
+                                <div>
+                                    <input
+                                        type="radio"
+                                        id="en"
+                                        name="language"
+                                        value="EN"
+                                        checked
+                                    />
+                                    <label for="en">EN</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="fr" name="language" value="FR" />
+                                    <label for="fr">FR</label>
+                                </div>
+                                <div>
+                                    <input type="radio" id="ar" name="language" value="AR" />
+                                    <label for="ar">AR</label>
+                                </div>
+                            </form>
+                            <div id="empty"></div>
                             <span id="date-container">Date: 2/15/2024</span>
                             <span id="time-container">Time: 14:17:51</span>
                         </div>
@@ -543,6 +594,11 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                 document.onreadystatechange = function () {
                     if (document.readyState == "complete") {
                         //===>
+                        const languageForm = document.getElementById("language-form");
+                        let selectedLanguage = "EN";
+                        const speechLanguages = { EN: "en-US", FR: "fr-FR", AR: "ar-SA" };
+
+                        //===>
                         const listeningCheckbox = document.getElementById("toggle-listening");
                         const listeningIndicator = document.getElementById(
                             "listening-indicator"
@@ -577,7 +633,11 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                         //* ========================================================================================= *//
 
                         //===>
-                        setUpSpeech("en-US");
+                        handleSelectedLanguage();
+                        languageForm.addEventListener("change", handleSelectedLanguage);
+
+                        //===>
+                        setUpSpeech(speechLanguages[selectedLanguage]);
                         handleShowText(generatedText);
                         handleToggleListening(0);
                         handleCheckboxChange(listeningCheckbox, listeningIndicator);
@@ -658,6 +718,20 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                         process();
 
                         //* ========================================================================================= *//
+                        function handleSelectedLanguage() {
+                            let xhttp = new XMLHttpRequest();
+                            const selectedLanguageInput = document.querySelector(
+                                'input[name="language"]:checked'
+                            );
+
+                            selectedLanguage = selectedLanguageInput.value;
+                            xhttp.open(
+                                "PUT",
+                                "GET_SELECTED_LANG?lang=" + selectedLanguage,
+                                false
+                            );
+                            xhttp.send();
+                        }
 
                         function setUpSpeech(lang) {
                             recognition = new webkitSpeechRecognition();
@@ -732,13 +806,11 @@ const char htmlWebPage[] PROGMEM = R"RAW(
                                 false
                             );
                             xhttp.send();
-                            // console.log(listeningState);
                         }
                         function handleToggleTalking(talkingState) {
                             let xhttp = new XMLHttpRequest();
                             xhttp.open("PUT", "TOGGLE_TALKING?state=" + talkingState, false);
                             xhttp.send();
-                            // console.log(talkingState);
                         }
 
                         function hide(el) {

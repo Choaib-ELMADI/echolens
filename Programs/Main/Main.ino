@@ -4,12 +4,15 @@
 #include <WebServer.h>
 #include <WiFi.h>
 
+bool DEBUGGING = true;
+
 const char *ssid = "Choaibs-Phone";
 const char *password = "devchoaib";
 
 bool isListening = false;
 bool isTalking = false;
 String signTextData = "_EMPTY_";
+String selectedLang = "EN";
 unsigned long lastDataMillis = 0;
 const uint8_t delayTime = 250;
 
@@ -43,11 +46,13 @@ void setup() {
     pinMode(talkingLED, OUTPUT);
 
     server.on("/", sendMainPage);
-    server.on("/GET_TEXT_SIGN", getTextSign);        // Get text from Python
-    server.on("/SEND_TEXT_SIGN", sendTextSign);      // Send text to the webpage
+    server.on("/GET_TEXT_SIGN", getTextSign);        // Get text from Py
+    server.on("/SEND_TEXT_SIGN", sendTextSign);      // Send text to JS
     server.on("/TOGGLE_LISTENING", toggleListening); // Toggle listening
     server.on("/TOGGLE_TALKING", toggleTalking);     // Toggle talking
-    server.on("/IS_TALKING", sendTalkingState); // Send talking state to Python
+    server.on("/IS_TALKING", sendTalkingState);      // Send talking state to Py
+    server.on("/GET_SELECTED_LANG", getSelectedLang);   // Get lang from JS
+    server.on("/SEND_SELECTED_LANG", sendSelectedLang); // Send lang to Py
 
     server.begin();
 }
@@ -65,7 +70,9 @@ void loop() {
             digitalWrite(listeningLED, LOW);
         }
 
-        // printData();
+        if (DEBUGGING) {
+            printData();
+        }
     }
 
     server.handleClient();
@@ -146,7 +153,10 @@ void printData() {
     Serial.print(isTalking);
 
     Serial.print(", data: ");
-    Serial.println(signTextData);
+    Serial.print(signTextData);
+
+    Serial.print(", lang: ");
+    Serial.println(selectedLang);
 }
 
 /**********************************/
@@ -173,6 +183,11 @@ void getTextSign() {
 }
 void sendTextSign() { server.send(200, "text/plain", signTextData); }
 void sendTalkingState() { server.send(200, "text/plain", String(isTalking)); }
+void getSelectedLang() {
+    selectedLang = server.arg("lang");
+    server.send(200, "text/plain", "");
+}
+void sendSelectedLang() { server.send(200, "text/plain", selectedLang); }
 
 /**********************************/
 /*         FUNCTIONS HERE         */
