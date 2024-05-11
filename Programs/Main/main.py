@@ -103,7 +103,7 @@ while True:
     # ====>
     text_message = " ".join(list_message).strip()
     image_text_message = " ".join(list_message[-4:]).strip()
-    if image_text_message != "":
+    if image_text_message and image_text_message != ".":
         cvzone.putTextRect(
             frame,
             f"{image_text_message}",
