@@ -34,6 +34,11 @@ void startCameraServer();
 /*             MAIN               */
 /**********************************/
 void setup() {
+    pinMode(listeningLED, OUTPUT);
+    pinMode(talkingLED, OUTPUT);
+    digitalWrite(listeningLED, HIGH);
+    digitalWrite(talkingLED, HIGH);
+
     Serial.begin(115200);
 
     setupCamera();
@@ -41,9 +46,6 @@ void setup() {
 
     connectToWiFi();
     Serial.println("Done connect WiFi.");
-
-    pinMode(listeningLED, OUTPUT);
-    pinMode(talkingLED, OUTPUT);
 
     server.on("/", sendMainPage);
     server.on("/GET_TEXT_SIGN", getTextSign);        // Get text from Py
@@ -55,6 +57,9 @@ void setup() {
     server.on("/SEND_SELECTED_LANG", sendSelectedLang); // Send lang to Py
 
     server.begin();
+
+    digitalWrite(listeningLED, LOW);
+    digitalWrite(talkingLED, LOW);
 }
 void loop() {
     if (millis() - lastDataMillis >= delayTime) {
@@ -62,12 +67,16 @@ void loop() {
 
         if (isListening) {
             blinkLED(listeningLED, listeningLEDInterval, 0);
-            digitalWrite(talkingLED, LOW);
+            // digitalWrite(talkingLED, LOW);
+        } else {
+            digitalWrite(listeningLED, LOW);
         }
 
         if (isTalking) {
             blinkLED(talkingLED, talkingLEDInterval, 1);
-            digitalWrite(listeningLED, LOW);
+            // digitalWrite(listeningLED, LOW);
+        } else {
+            digitalWrite(talkingLED, LOW);
         }
 
         if (DEBUGGING) {

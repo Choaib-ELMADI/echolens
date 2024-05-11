@@ -31,7 +31,7 @@ hands = mp_hands.Hands(max_num_hands=1)
 url = "http://192.168.169.196"
 get_talking_state_url = f"{ url }/IS_TALKING"
 get_lang_url = f"{ url }/SEND_SELECTED_LANG"
-empty_text = "_BLANK_"
+gesture = "_BLANK_"
 selected_lang = "EN"
 list_message = []
 text_message = ""
@@ -89,7 +89,11 @@ while True:
                 hand_keypoints, selected_lang
             )
 
-        if gesture != "_BLANK_" and gesture not in list_message:
+        if (
+            gesture != "_BLANK_"
+            and gesture not in list_message
+            and "." not in list_message
+        ):
             if gesture == "Point":
                 list_message.append(".")
                 is_end_of_phrase = True
@@ -117,13 +121,14 @@ while True:
 
     # ====>
     if is_end_of_phrase:
-        post_url = f"{url}/GET_TEXT_SIGN?signs={text_message}"
-        post_response = requests.post(post_url)
-        if post_response.status_code == 200:
-            list_message = []
-            text_message = ""
-            image_text_message = ""
-            is_end_of_phrase = False
+        if text_message and text_message != ".":
+            post_url = f"{url}/GET_TEXT_SIGN?signs={text_message}"
+            post_response = requests.post(post_url)
+            if post_response.status_code == 200:
+                list_message = []
+                text_message = ""
+                image_text_message = ""
+                is_end_of_phrase = False
 
     # ====>
     counter += 1
