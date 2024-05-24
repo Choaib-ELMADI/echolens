@@ -52,6 +52,7 @@ border_color = (61, 147, 8)  # GREEN
 
 # ====>
 stream_url = f"{ url }:81/stream"
+my_cap = cv2.VideoCapture(0)
 cap = cv2.VideoCapture(stream_url)
 
 counter = 0
@@ -60,6 +61,10 @@ while True:
     _, frame = cap.read()
     frame_copy = np.copy(frame)
     frame_copy = cv2.cvtColor(frame_copy, cv2.COLOR_BGR2RGB)
+    frame = cv2.resize(frame, (480, 360))
+
+    _, my_frame = my_cap.read()
+    my_frame = cv2.resize(my_frame, (480, 360))
 
     # ====>
     get_talking_response = requests.get(get_talking_state_url)
@@ -122,6 +127,7 @@ while True:
             colorB=text_color,
         )
     cv2.imshow("Frame", frame)
+    cv2.imshow("Me", my_frame)
 
     # ====>
     if is_end_of_phrase:
