@@ -1,3 +1,6 @@
+# ====>
+print("Loading...")
+
 # ===> WARNINGS
 
 
@@ -20,6 +23,9 @@ import numpy as np
 import requests
 import cvzone
 import cv2
+
+# ====>
+print("Loaded.")
 
 # ====>
 mp_drawing_styles = mp.solutions.drawing_styles  # type: ignore
@@ -89,16 +95,14 @@ while True:
                 hand_keypoints, selected_lang
             )
 
-        if (
-            gesture != "_BLANK_"
-            and gesture not in list_message
-            and "." not in list_message
-        ):
-            if gesture == "Point":
-                list_message.append(".")
+        if gesture != "_BLANK_" and gesture not in list_message:
+            if gesture == ".":
                 is_end_of_phrase = True
-            else:
-                list_message.append(gesture)
+
+            list_message.append(gesture)
+
+            if len(list_message) > 0 and list_message[0] == ".":
+                list_message.pop(0)
 
     # ====>
     text_message = " ".join(list_message).strip()
