@@ -1,6 +1,15 @@
 [![Choaib ELMADI - EchoLens](https://img.shields.io/badge/Choaib_ELMADI-EchoLens-8800dd)](https://elmadichoaib.vercel.app) ![Status - Building](https://img.shields.io/badge/Status-Building-2bd729) [![Credit - Start ASL](https://img.shields.io/badge/Credit-Start_ASL-3b8af2)](https://www.startasl.com/)
- 
- # EchoLens: ESP32-CAM based, AI powered Smart Glasses
+
+# EchoLens: ESP32-CAM based, AI powered Smart Glasses
+
+Echolens is a project of smart glasses for deaf and mute people. It converts speech into text and translates sign language into speech, thus facilitating communication.
+
+## Demonstration: [Watch the demo video](Media/Demo/Video%20Demo.mp4)
+
+<video controls>
+  <source src="Media/Demo/Video Demo.mp4" type="video/mp4">
+  Your browser does not support the video tag.
+</video>
 
 ## Presentation (in French):
 
