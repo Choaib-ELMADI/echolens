@@ -6,10 +6,7 @@ Echolens is a project of smart glasses for deaf and mute people. It converts spe
 
 ## Demonstration: [Watch the demo video](Media/Demo/Video%20Demo.mp4)
 
-<video controls>
-  <source src="Media/Demo/Video Demo.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+https://github.com/Choaib-ELMADI/echolens/assets/111356633/183a2f4e-e1b0-43b9-b7cc-31356fb80486
 
 ## Presentation (in French):
 
