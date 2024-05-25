@@ -61,10 +61,10 @@ while True:
     _, frame = cap.read()
     frame_copy = np.copy(frame)
     frame_copy = cv2.cvtColor(frame_copy, cv2.COLOR_BGR2RGB)
-    frame = cv2.resize(frame, (480, 360))
+    frame = cv2.resize(frame, (400, 300))
 
     _, my_frame = my_cap.read()
-    my_frame = cv2.resize(my_frame, (480, 360))
+    my_frame = cv2.resize(my_frame, (400, 300))
 
     # ====>
     get_talking_response = requests.get(get_talking_state_url)
@@ -151,4 +151,5 @@ while True:
 
 # ====>
 cap.release()
+my_cap.release()
 cv2.destroyAllWindows()

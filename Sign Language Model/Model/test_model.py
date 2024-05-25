@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 import joblib  # type: ignore
 
+print("Loading...")
+
 labels_name = "data_label"
 labels_path = f"C:\\Users\\Choaib ELMADI\\Downloads\\D.I.F.Y\\Electronics\\Robotics\\6- EchoLens\\Sign Language Model\\Model\\{ labels_name }.csv"
 labels = pd.read_csv(labels_path)
@@ -19,6 +21,8 @@ def predict_hand_gesture(hand, lang):
 
 
 if __name__ == "__main__":
+    print("Loaded.")
+
     print(
         predict_hand_gesture(
             [
@@ -65,6 +69,6 @@ if __name__ == "__main__":
                 0.6213232278823853,
                 0.2722306549549103,
             ],
-            "EN",
+            "FR",
         )
     )
